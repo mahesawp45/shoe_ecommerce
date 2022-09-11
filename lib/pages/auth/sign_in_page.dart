@@ -53,73 +53,88 @@ class _SignInPageState extends State<SignInPage> {
       ),
       body: Stack(
         children: [
-          DecorationOne(height: height),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: R.appMargin.defaultMargin,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const AuthAppBar(title: 'Login', label: 'Sign In to Continue'),
-                const AuthTextField(
-                  label: 'Email',
-                  hintText: 'Your Email Address',
-                  icon: Icons.email,
-                ),
-                const AuthTextField(
-                  label: 'Password',
-                  hintText: 'Your Password',
-                  icon: Icons.lock,
-                  isPassword: true,
-                ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: width,
-                        height: height * 0.07,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.grey.withOpacity(0.03),
+          DecorationOne(height: height, top: -120, right: -70),
+          SizedBox(
+            height: height,
+            width: width,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: R.appMargin.defaultMargin,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const AuthAppBar(
+                      title: 'Login', label: 'Sign In to Continue'),
+                  SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        const AuthTextField(
+                          label: 'Email',
+                          hintText: 'Your Email Address',
+                          icon: Icons.email,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(Icons.arrow_forward_ios,
-                                color: Colors.grey.shade900, size: 15),
-                            Icon(Icons.arrow_forward_ios,
-                                color: Colors.grey.shade900, size: 15),
-                            Icon(Icons.arrow_forward_ios,
-                                color: Colors.grey.shade900, size: 15),
-                            Icon(Icons.arrow_forward_ios,
-                                color: Colors.grey.shade900, size: 15),
-                          ],
+                        const AuthTextField(
+                          label: 'Password',
+                          hintText: 'Your Password',
+                          icon: Icons.lock,
+                          isPassword: true,
                         ),
-                      ),
-                      Transform.translate(
-                        offset: Offset(update, 0),
-                        child: GestureDetector(
-                          onHorizontalDragUpdate: (details) {
-                            if (details.localPosition.dx > 0 &&
-                                details.localPosition.dx < (width * 0.7)) {
-                              setState(() {
-                                update = details.localPosition.dx;
-                                if (update >= (width * 0.68)) {
-                                  Navigator.pushNamed(context, HomePage.route);
-                                }
-                              });
-                            }
-                          },
-                          child:
-                              AuthButton(title: 'Sign In', size: height * 0.07),
+                        const SizedBox(height: 30),
+                        SizedBox(
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: width,
+                                height: height * 0.07,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: Colors.grey.withOpacity(0.03),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(Icons.arrow_forward_ios,
+                                        color: Colors.grey.shade900, size: 15),
+                                    Icon(Icons.arrow_forward_ios,
+                                        color: Colors.grey.shade900, size: 15),
+                                    Icon(Icons.arrow_forward_ios,
+                                        color: Colors.grey.shade900, size: 15),
+                                    Icon(Icons.arrow_forward_ios,
+                                        color: Colors.grey.shade900, size: 15),
+                                  ],
+                                ),
+                              ),
+                              Transform.translate(
+                                offset: Offset(update, 0),
+                                child: GestureDetector(
+                                  onHorizontalDragUpdate: (details) {
+                                    if (details.localPosition.dx > 0 &&
+                                        details.localPosition.dx <
+                                            (width * 0.7)) {
+                                      setState(() {
+                                        update = details.localPosition.dx;
+                                        if (update >= (width * 0.68)) {
+                                          Navigator.pushNamed(
+                                              context, HomePage.route);
+                                        }
+                                      });
+                                    }
+                                  },
+                                  child: AuthButton(
+                                      title: 'Sign In', size: height * 0.07),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

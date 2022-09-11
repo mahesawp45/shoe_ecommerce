@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
-import 'package:shamo/pages/auth/sign_up_page.dart';
-import 'package:shamo/pages/core/home_page.dart';
-import 'package:shamo/pages/auth/sign_in_page.dart';
-import 'package:shamo/pages/splash_page.dart';
+import 'package:shamo/R/routes/app_routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,12 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Shamo',
       debugShowCheckedModeBanner: false,
       theme: R.appTheme.getTheme(isDark: true),
-      routes: {
-        SplashPage.route: (context) => const SplashPage(),
-        SignInPage.route: (context) => const SignInPage(),
-        SignUpPage.route: (context) => const SignUpPage(),
-        HomePage.route: (context) => const HomePage(),
-      },
+      onGenerateRoute: AppRoute.allRoute,
     );
   }
 }
