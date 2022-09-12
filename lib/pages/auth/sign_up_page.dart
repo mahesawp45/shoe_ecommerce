@@ -51,7 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     const AuthTextField(
                       label: 'Email',
                       hintText: 'Your Email Address',
-                      icon: Icons.radio_button_checked_rounded,
+                      icon: Icons.email,
                     ),
                     const AuthTextField(
                       label: 'Password',

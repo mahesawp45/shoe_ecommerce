@@ -13,17 +13,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  iniTab() {
-    _tabController = TabController(length: 5, vsync: this);
-  }
+class _HomePageState extends State<HomePage> {
+  final ScrollController _controller = ScrollController();
+  bool isScroll = false;
 
   @override
   void initState() {
-    iniTab();
+    _controller.addListener(() {});
     super.initState();
   }
 
@@ -31,6 +27,8 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    List<String> category = ['All Shoes', 'Running', 'Training', 'Basketball'];
 
     return Scaffold(
       extendBody: true,
@@ -47,110 +45,312 @@ class _HomePageState extends State<HomePage>
               Expanded(
                 child: Column(
                   children: [
-                    Container(
-                      // margin: const EdgeInsets.only(top: 10),
-                      padding:
-                          const EdgeInsets.only(bottom: 20, right: 5, left: 30),
+                    _buildCategoryIndicator(category),
+                    _buildContent(height, width)
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100)),
-                      child: TabBar(
-                        physics: const BouncingScrollPhysics(),
-                        onTap: (value) {},
-                        unselectedLabelStyle:
-                            R.appTextStyle.secondaryTextStyle.copyWith(),
-                        unselectedLabelColor: R.appColors.darkTextColor,
-                        indicatorWeight: 0,
-                        labelStyle: R.appTextStyle.primaryTextStyle,
-                        controller: _tabController,
-                        isScrollable: true,
-                        indicatorColor: Colors.transparent,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: R.appColors.primaryColor,
-                        ),
-                        labelColor: R.appColors.primaryTextColor,
-                        tabs: List.generate(
-                          5,
-                          (index) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border:
-                                  Border.all(color: R.appColors.darkTextColor),
+  SizedBox _buildCategoryIndicator(List<String> category) {
+    return SizedBox(
+      height: 100,
+      child: ListView(
+        clipBehavior: Clip.none,
+        padding: const EdgeInsets.all(10),
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        children: List.generate(
+          category.length,
+          (index) => Container(
+            width: 70,
+            padding: const EdgeInsets.only(
+              top: 10,
+              right: 10,
+              left: 10,
+
+              // vertical: 10,
+            ),
+            margin: EdgeInsets.only(left: index == 0 ? 30 : 15, right: 15),
+            decoration: BoxDecoration(
+              color: index == 0 ? R.appColors.primaryColor : Colors.transparent,
+              border: index == 0
+                  ? null
+                  : Border.all(
+                      color: R.appColors.darkTextColor,
+                    ),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                index != 0
+                    ? const BoxShadow()
+                    : BoxShadow(
+                        blurRadius: 25,
+                        spreadRadius: 5,
+                        color: R.appColors.primaryColor.withOpacity(0.7),
+                        offset: const Offset(0, 0),
+                      ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  height: 35,
+                  width: 35,
+                  decoration: BoxDecoration(
+                    color: index != 0
+                        ? Colors.purple.withOpacity(0.15)
+                        : Colors.purple.shade900,
+                    borderRadius: BorderRadius.circular(500),
+                    boxShadow: [
+                      index != 0
+                          ? const BoxShadow()
+                          : BoxShadow(
+                              blurStyle: BlurStyle.inner,
+                              blurRadius: 30,
+                              spreadRadius: 6,
+                              color: Colors.black.withOpacity(0.25),
+                              offset: const Offset(0, 0),
                             ),
-                            child: Tab(
-                              text: 'Shoes ${index + 1}',
+                    ],
+                  ),
+                  child: index != 0
+                      ? null
+                      : Icon(
+                          Icons.radio_button_checked_sharp,
+                          color: Colors.white.withOpacity(0.7),
+                        ),
+                ),
+                Expanded(
+                  child: FittedBox(
+                    child: Text(
+                      category[index],
+                      style: index == 0
+                          ? R.appTextStyle.primaryTextStyle
+                          : R.appTextStyle.darkTextStyle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(double height, double width) {
+    List<Map<String, dynamic>> pops = [
+      {
+        'title': 'Court Vision 2.0',
+        'category': 'Hiking',
+        'price': '\$58,67',
+        'img': R.appAssets.pop1,
+      },
+      {
+        'title': 'Terrex Urban Low',
+        'category': 'Hiking',
+        'price': '\$143,98',
+        'img': R.appAssets.pop2,
+      },
+      {
+        'title': 'SL 20 Shoes',
+        'category': 'Running',
+        'price': '\$123,82',
+        'img': R.appAssets.pop3,
+      },
+    ];
+
+    return Expanded(
+      child: ListView(
+        controller: _controller,
+        physics: const BouncingScrollPhysics(),
+        children: [
+          _buildPopularProduct(height, pops, width),
+          _buildNewArrivals(pops),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNewArrivals(List<Map<String, dynamic>> pops) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: R.appMargin.defaultMargin,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 40, bottom: 10),
+            child: Text(
+              'New Arrivals',
+              style: R.appTextStyle.primaryTextStyle
+                  .copyWith(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+          ),
+          Column(
+            children: List.generate(pops.length, (index) {
+              var data = pops[index];
+
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 15),
+                height: 120,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: R.appColors.cardColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      width: 120,
+                      height: 120,
+                      child: Image.asset(
+                        data['img'],
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            data['category'],
+                            style: R.appTextStyle.secondaryTextStyle.copyWith(
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            data['title'],
+                            style: R.appTextStyle.primaryTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            data['price'],
+                            style: R.appTextStyle.priceTextStyle.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _buildPopularProduct(
+      double height, List<Map<String, dynamic>> pops, double width) {
+    return SizedBox(
+      height: height * 0.36,
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: R.appMargin.defaultMargin,
+            ),
+            child: Text(
+              'Popular Product',
+              style: R.appTextStyle.primaryTextStyle.copyWith(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+              child: ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            separatorBuilder: (context, index) {
+              return const SizedBox(width: 30);
+            },
+            scrollDirection: Axis.horizontal,
+            itemCount: pops.length,
+            itemBuilder: (context, index) {
+              var data = pops[index];
+
+              return Padding(
+                padding: EdgeInsets.only(left: index > 0 ? 0 : 30),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: width * 0.50,
+                    decoration: BoxDecoration(
+                      color: R.appColors.cardColor,
+                      // color: Colors.amber,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Image.asset(
+                              data['img'],
+                              fit: BoxFit.contain,
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding:
-                            EdgeInsets.only(left: R.appMargin.defaultMargin),
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: List.generate(
-                            5,
-                            (index) => Column(
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(
+                              left: 15,
+                              right: 15,
+                              bottom: 20,
+                            ),
+                            width: double.infinity,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  height: height * 0.3,
-                                  color: Colors.amber,
-                                  width: double.infinity,
-                                  child: Text('$index'),
+                                Text(
+                                  data['category'],
+                                  style: R.appTextStyle.secondaryTextStyle
+                                      .copyWith(
+                                    fontSize: 12,
+                                  ),
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 30, bottom: 20),
-                                        child: Text(
-                                          'New Arrivals',
-                                          style: R.appTextStyle.primaryTextStyle
-                                              .copyWith(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: ListView.separated(
-                                          physics:
-                                              const BouncingScrollPhysics(),
-                                          separatorBuilder: (context, index) {
-                                            return const SizedBox(height: 20);
-                                          },
-                                          itemCount: 10,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              height: 50,
-                                              color: Colors.amber,
-                                              child: Text('$index'),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
+                                Text(
+                                  data['title'],
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  data['price'],
+                                  style: R.appTextStyle.priceTextStyle.copyWith(
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              );
+            },
+          )),
         ],
       ),
     );
@@ -240,7 +440,7 @@ class CartFloatingButton extends StatelessWidget {
             BoxShadow(
               blurRadius: 50,
               spreadRadius: 10,
-              color: R.appColors.secondaryColor.withOpacity(0.4),
+              color: R.appColors.secondaryColor.withOpacity(0.7),
               offset: const Offset(0, 0),
             ),
           ],
@@ -262,6 +462,7 @@ class MyBottomAppBar extends StatelessWidget {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       child: BottomAppBar(
         color: R.appColors.bgColor3.withOpacity(0.55),
+        // color: Colors.white.withOpacity(0.05),
         shape: const CircularNotchedRectangle(),
         clipBehavior: Clip.antiAlias,
         notchMargin: 20,

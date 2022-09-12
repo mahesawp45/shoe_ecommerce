@@ -5,4 +5,9 @@ class AppAssets {
   final String home = 'assets/Home.png';
   final String profile = 'assets/Profile.png';
   final String favorite = 'assets/Union.png';
+
+  // Shoes
+  final String pop1 = 'assets/shoes/1.png';
+  final String pop2 = 'assets/shoes/2.png';
+  final String pop3 = 'assets/shoes/3.png';
 }
