@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shamo/pages/auth/sign_in_page.dart';
 import 'package:shamo/pages/auth/sign_up_page.dart';
 import 'package:shamo/pages/core/home_page.dart';
+import 'package:shamo/pages/core/message_page.dart';
+import 'package:shamo/pages/core/subpages/sub_page_export.dart';
 import 'package:shamo/pages/error_page.dart';
 import 'package:shamo/pages/splash_page.dart';
 
@@ -30,6 +32,18 @@ class AppRoute {
         return MaterialPageRoute(
           builder: (context) {
             return const HomePage();
+          },
+        );
+      case MessagePage.route:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const MessagePage();
+          },
+        );
+      case DetailMessagePage.route:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const DetailMessagePage();
           },
         );
 

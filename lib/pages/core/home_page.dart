@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/pages/core/message_page.dart';
-import 'package:shamo/pages/core/subpages/all_shoes_page.dart';
-import 'package:shamo/pages/core/subpages/basket_page.dart';
-import 'package:shamo/pages/core/subpages/running_page.dart';
-import 'package:shamo/pages/core/subpages/training_page.dart';
+import 'package:shamo/pages/core/subpages/sub_page_export.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -336,12 +333,64 @@ class MyBottomAppBar extends StatefulWidget {
 class _MyBottomAppBarState extends State<MyBottomAppBar> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     List<Widget> menuItems = [
-      Image.asset(R.appAssets.home, width: 21),
-      Image.asset(R.appAssets.chat, width: 21),
-      const SizedBox(),
-      Image.asset(R.appAssets.favorite, width: 21),
-      Image.asset(R.appAssets.profile, width: 21),
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: widget.indexHome == 0
+            ? BoxDecoration(
+                color: Colors.black.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(100),
+              )
+            : null,
+        child: Image.asset(
+          R.appAssets.home,
+          width: 21,
+          color: widget.indexHome == 0 ? R.appColors.primaryColor : null,
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: widget.indexHome == 1
+            ? BoxDecoration(
+                color: Colors.black.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(100),
+              )
+            : null,
+        child: Image.asset(
+          R.appAssets.chat,
+          width: 21,
+          color: widget.indexHome == 1 ? R.appColors.primaryColor : null,
+        ),
+      ),
+      SizedBox(width: width * 0.1),
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: widget.indexHome == 2
+            ? BoxDecoration(
+                color: Colors.black.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(100),
+              )
+            : null,
+        child: Image.asset(
+          R.appAssets.favorite,
+          width: 21,
+          color: widget.indexHome == 2 ? R.appColors.primaryColor : null,
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: widget.indexHome == 3
+            ? BoxDecoration(
+                color: Colors.black.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(100),
+              )
+            : null,
+        child: Image.asset(R.appAssets.profile,
+            width: 21,
+            color: widget.indexHome == 3 ? R.appColors.primaryColor : null),
+      ),
     ];
 
     return ClipRRect(

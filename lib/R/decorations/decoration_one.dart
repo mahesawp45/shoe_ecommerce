@@ -7,17 +7,23 @@ class DecorationOne extends StatelessWidget {
   const DecorationOne({
     Key? key,
     required this.height,
+    this.width,
     this.top,
     this.right,
     this.bottom,
     this.left,
+    this.color,
+    this.radius,
   }) : super(key: key);
 
   final double height;
+  final double? width;
   final double? top;
   final double? right;
   final double? bottom;
   final double? left;
+  final Color? color;
+  final double? radius;
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +34,14 @@ class DecorationOne extends StatelessWidget {
       left: left,
       child: Container(
         height: height * 0.3,
-        width: height * 0.3,
+        width: width ?? (height * 0.3),
         decoration: BoxDecoration(
-          color: Colors.transparent,
           borderRadius: BorderRadius.circular(200),
           boxShadow: [
             BoxShadow(
               blurRadius: 1000,
-              spreadRadius: 10,
-              color: R.appColors.primaryColor.withOpacity(0.5),
+              spreadRadius: radius ?? 10,
+              color: color ?? R.appColors.primaryColor.withOpacity(0.5),
               offset: const Offset(0, 0),
             ),
           ],
