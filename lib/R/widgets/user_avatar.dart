@@ -1,33 +1,43 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:shamo/R/r.dart';
 
-class UserAvatar extends StatelessWidget {
-  const UserAvatar({
+class UserProfileAvatar extends StatelessWidget {
+  const UserProfileAvatar({
     Key? key,
     this.size,
+    required this.img,
+    this.isUser,
   }) : super(key: key);
 
   final double? size;
+  final String img;
+  final bool? isUser;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: size ?? 54,
-      width: size ?? 54,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            R.appColors.secondaryColor,
-            Colors.cyan.shade900,
-          ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: Container(
+        height: size ?? 54,
+        width: size ?? 54,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              R.appColors.secondaryColor,
+              Colors.cyan.shade900,
+            ],
+          ),
         ),
-        borderRadius: BorderRadius.circular(200),
-      ),
-      child: Image.asset(
-        R.appAssets.logo,
-        fit: BoxFit.contain,
-        color: R.appColors.cardColor,
+        child: Align(
+          alignment: isUser == true ? Alignment.bottomCenter : Alignment.center,
+          child: Image.asset(
+            img,
+            color: Colors.white.withOpacity(0.8),
+          ),
+        ),
       ),
     );
   }

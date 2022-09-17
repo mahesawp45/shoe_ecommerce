@@ -3,6 +3,8 @@ import 'package:shamo/pages/auth/sign_in_page.dart';
 import 'package:shamo/pages/auth/sign_up_page.dart';
 import 'package:shamo/pages/core/home_page.dart';
 import 'package:shamo/pages/core/message_page.dart';
+import 'package:shamo/pages/core/subpages/profile/edit_profile_page.dart';
+import 'package:shamo/pages/core/subpages/profile/profile_page.dart';
 import 'package:shamo/pages/core/subpages/sub_page_export.dart';
 import 'package:shamo/pages/error_page.dart';
 import 'package:shamo/pages/splash_page.dart';
@@ -44,6 +46,25 @@ class AppRoute {
         return MaterialPageRoute(
           builder: (context) {
             return const DetailMessagePage();
+          },
+        );
+      case WishListPage.route:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const WishListPage();
+          },
+        );
+
+      case ProfilePage.route:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const ProfilePage();
+          },
+        );
+      case EditProfilePage.route:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const EditProfilePage();
           },
         );
 

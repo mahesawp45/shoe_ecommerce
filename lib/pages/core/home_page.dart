@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
+import 'package:shamo/R/widgets/user_avatar.dart';
 import 'package:shamo/pages/core/message_page.dart';
+import 'package:shamo/pages/core/subpages/profile/profile_page.dart';
 import 'package:shamo/pages/core/subpages/sub_page_export.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,7 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   whenScroll() {
     _controller.addListener(() {
-      double value = _controller.offset / 100;
+      double value = _controller.offset / 50;
 
       // ukuran untuk card book
       setState(() {
@@ -58,14 +60,18 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: const CartFloatingButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
-          indexHome: indexHome, pageController: _pageControllerHome),
+        indexHome: indexHome,
+        pageController: _pageControllerHome,
+      ),
       body: PageView(
-        scrollDirection: Axis.vertical,
+        scrollDirection: Axis.horizontal,
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageControllerHome,
         children: [
           _buildHomePage(height, category),
           MessagePage(pageController: _pageControllerHome),
+          WishListPage(pageController: _pageControllerHome),
+          ProfilePage(pageController: _pageControllerHome),
         ],
       ),
     );
@@ -251,28 +257,9 @@ class HeaderBar extends StatelessWidget {
               ),
             ],
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Container(
-              height: 54,
-              width: 54,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    R.appColors.secondaryColor,
-                    Colors.cyan.shade900,
-                  ],
-                ),
-              ),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  R.appAssets.profile,
-                  color: Colors.white.withOpacity(0.8),
-                ),
-              ),
-            ),
+          UserProfileAvatar(
+            img: R.appAssets.profile,
+            isUser: true,
           ),
         ],
       ),
@@ -316,83 +303,18 @@ class CartFloatingButton extends StatelessWidget {
   }
 }
 
-class MyBottomAppBar extends StatefulWidget {
-  MyBottomAppBar({
+class MyBottomAppBar extends StatelessWidget {
+  const MyBottomAppBar({
     Key? key,
     required this.pageController,
     required this.indexHome,
   }) : super(key: key);
 
   final PageController pageController;
-  int indexHome;
+  final int indexHome;
 
-  @override
-  State<MyBottomAppBar> createState() => _MyBottomAppBarState();
-}
-
-class _MyBottomAppBarState extends State<MyBottomAppBar> {
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
-    List<Widget> menuItems = [
-      Container(
-        padding: const EdgeInsets.all(8),
-        decoration: widget.indexHome == 0
-            ? BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(100),
-              )
-            : null,
-        child: Image.asset(
-          R.appAssets.home,
-          width: 21,
-          color: widget.indexHome == 0 ? R.appColors.primaryColor : null,
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8),
-        decoration: widget.indexHome == 1
-            ? BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(100),
-              )
-            : null,
-        child: Image.asset(
-          R.appAssets.chat,
-          width: 21,
-          color: widget.indexHome == 1 ? R.appColors.primaryColor : null,
-        ),
-      ),
-      SizedBox(width: width * 0.1),
-      Container(
-        padding: const EdgeInsets.all(8),
-        decoration: widget.indexHome == 2
-            ? BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(100),
-              )
-            : null,
-        child: Image.asset(
-          R.appAssets.favorite,
-          width: 21,
-          color: widget.indexHome == 2 ? R.appColors.primaryColor : null,
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8),
-        decoration: widget.indexHome == 3
-            ? BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(100),
-              )
-            : null,
-        child: Image.asset(R.appAssets.profile,
-            width: 21,
-            color: widget.indexHome == 3 ? R.appColors.primaryColor : null),
-      ),
-    ];
-
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       child: BottomAppBar(
@@ -408,26 +330,15 @@ class _MyBottomAppBarState extends State<MyBottomAppBar> {
             child: SizedBox(
               height: 50,
               width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(menuItems.length, (index) {
-                  return GestureDetector(
-                    child: Container(
-                      child: menuItems[index],
-                    ),
-                    onTap: () {
-                      widget.indexHome = index;
-
-                      widget.pageController.animateToPage(
-                        widget.indexHome,
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeInOut,
-                      );
-                      setState(() {});
-                    },
-                  );
-                }),
-              ),
+              child: StatefulBuilder(builder: (context, setMenu) {
+                setMenu(() {
+                  indexHome;
+                });
+                return R.appBottomMenuItem.menuTime(
+                  indexHome: indexHome,
+                  pageController: pageController,
+                );
+              }),
             ),
           ),
         ),

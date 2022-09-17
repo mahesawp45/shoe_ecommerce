@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
-import 'package:shamo/R/widgets/message_header.dart';
+import 'package:shamo/R/widgets/my_header.dart';
+import 'package:shamo/R/widgets/product_send.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
 
 class DetailMessagePage extends StatefulWidget {
@@ -37,12 +38,11 @@ class _DetailMessagePageState extends State<DetailMessagePage> {
         extendBody: true,
         body: Column(
           children: [
-            const MessageHeader(
-              child: MessageHeaderDetail(),
+            const MyHeader(
+              child: MyHeaderDetail(),
             ),
             Expanded(
               child: Stack(
-                clipBehavior: Clip.antiAlias,
                 children: [
                   DecorationOne(
                     height: height * 0.6,
@@ -59,100 +59,8 @@ class _DetailMessagePageState extends State<DetailMessagePage> {
                   ),
                   Column(
                     children: [
-                      Expanded(
-                        child: ListView.builder(
-                          padding:
-                              EdgeInsets.only(left: R.appMargin.defaultMargin),
-                          physics: const BouncingScrollPhysics(),
-                          reverse: true,
-                          itemCount: 1,
-                          itemBuilder: (context, index) {
-                            return Stack(
-                              children: [
-                                Container(
-                                  height: 84,
-                                  width: 225,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        R.appColors.primaryColor,
-                                        R.appColors.secondaryColor,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    margin: const EdgeInsets.all(5),
-                                    height: 74,
-                                    width: 215,
-                                    decoration: BoxDecoration(
-                                      color: R.appColors.bgColor3,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 54,
-                                          width: 54,
-                                          decoration: BoxDecoration(
-                                            color: R.appColors.cardColor,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Image.asset(
-                                            pop['img'],
-                                            fit: BoxFit.contain,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "${pop['title']}",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: R.appTextStyle
-                                                    .primaryTextStyle,
-                                              ),
-                                              Text(
-                                                "${pop['price']}",
-                                                style: R.appTextStyle
-                                                    .priceTextStyle,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 10),
-                                          child: Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Icon(
-                                              Icons.cancel_rounded,
-                                              size: 22,
-                                              color: R.appColors.primaryColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
+                      // MessageSend(width: width, pop: pop),
+                      MessageSendProduct(pop: pop),
                       const MessageInput(),
                     ],
                   ),
@@ -161,6 +69,178 @@ class _DetailMessagePageState extends State<DetailMessagePage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MessageSend extends StatelessWidget {
+  const MessageSend({
+    Key? key,
+    required this.width,
+    required this.pop,
+  }) : super(key: key);
+
+  final double width;
+  final Map<String, dynamic> pop;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: StreamBuilder(builder: (context, snapshot) {
+        return ListView.separated(
+          reverse: true,
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          padding: EdgeInsets.all(R.appMargin.defaultMargin),
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 20);
+          },
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return SizedBox(
+              width: width * 0.8,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: index < 1 ? 18 : 5,
+                            vertical: index < 1 ? 12 : 15),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              R.appColors.bgColor3,
+                              R.appColors.bgColor2.withOpacity(0.4),
+                            ],
+                          ),
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                            topLeft: Radius.circular(16),
+                          ),
+                        ),
+                        child: index < 1
+                            ? Text(
+                                'Good night ',
+                                style: R.appTextStyle.primaryTextStyle,
+                              )
+                            : ProductSendContent(pop: pop),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Now',
+                        style: R.appTextStyle.darkTextStyle.copyWith(
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }),
+    );
+  }
+}
+
+class ProductSendContent extends StatelessWidget {
+  const ProductSendContent({
+    Key? key,
+    required this.pop,
+  }) : super(key: key);
+
+  final Map<String, dynamic> pop;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ProductSend(pop: pop, isDeletable: false),
+        const SizedBox(height: 8),
+        SizedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              ProductSendButton(label: 'Add to Cart', reverse: true),
+              SizedBox(width: 10),
+              ProductSendButton(label: 'Buy Now', reverse: false),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class ProductSendButton extends StatelessWidget {
+  const ProductSendButton({
+    Key? key,
+    required this.label,
+    required this.reverse,
+  }) : super(key: key);
+
+  final String label;
+  final bool reverse;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        height: 41,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 10,
+        ),
+        decoration: BoxDecoration(
+          border: reverse
+              ? Border.all(
+                  color: R.appColors.primaryColor,
+                )
+              : null,
+          color: reverse ? null : R.appColors.primaryColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: reverse ? R.appColors.primaryColor : R.appColors.bgColor2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MessageSendProduct extends StatelessWidget {
+  const MessageSendProduct({
+    Key? key,
+    required this.pop,
+  }) : super(key: key);
+
+  final Map<String, dynamic> pop;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: R.appMargin.defaultMargin),
+        physics: const BouncingScrollPhysics(),
+        reverse: true,
+        itemCount: 2,
+        itemBuilder: (context, index) {
+          return ProductSend(pop: pop, isDeletable: true);
+        },
       ),
     );
   }
@@ -183,7 +263,7 @@ class _MessageInputState extends State<MessageInput> {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: R.appMargin.defaultMargin,
-        vertical: 20,
+        vertical: 10,
       ),
       width: double.infinity,
       child: Row(
@@ -227,12 +307,13 @@ class _MessageInputState extends State<MessageInput> {
             width: 45,
             decoration: BoxDecoration(
               color: R.appColors.primaryColor,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(15),
             ),
-            child: const Center(
+            child: Center(
               child: Icon(
                 Icons.send,
-                color: Colors.white,
+                color: R.appColors.primaryTextColor,
+                size: 19,
               ),
             ),
           ),
@@ -242,8 +323,8 @@ class _MessageInputState extends State<MessageInput> {
   }
 }
 
-class MessageHeaderDetail extends StatelessWidget {
-  const MessageHeaderDetail({
+class MyHeaderDetail extends StatelessWidget {
+  const MyHeaderDetail({
     Key? key,
   }) : super(key: key);
 
@@ -302,7 +383,8 @@ class UserAvatarDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const UserAvatar(
+        UserProfileAvatar(
+          img: R.appAssets.logo,
           size: 50,
         ),
         Positioned(

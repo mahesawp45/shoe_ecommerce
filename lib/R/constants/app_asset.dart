@@ -13,4 +13,10 @@ class AppAssets {
 
   // Message
   final String headset = 'assets/Headset Icon.png';
+
+  // Favorite
+  final String favShoes = 'assets/Love Icon.png';
+
+  // PROFILE
+  final String logout = 'assets/Exit Button.png';
 }
