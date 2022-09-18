@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/shoe_card_mini.dart';
 import 'package:shamo/R/widgets/shoe_tag.dart';
+import 'package:shamo/data_dummy.dart';
 
 class RunningPage extends StatelessWidget {
   const RunningPage({
@@ -16,44 +17,11 @@ class RunningPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> pops = [
-      {
-        'title': 'Court Vision 2.0',
-        'category': 'Hiking',
-        'price': '\$58,67',
-        'img': R.appAssets.pop1,
-      },
-      {
-        'title': 'Terrex Urban Low',
-        'category': 'Hiking',
-        'price': '\$143,98',
-        'img': R.appAssets.pop2,
-      },
-      {
-        'title': 'SL 20 Shoes',
-        'category': 'Running',
-        'price': '\$123,82',
-        'img': R.appAssets.pop3,
-      },
-      {
-        'title': 'Court Vision 2.0',
-        'category': 'Hiking',
-        'price': '\$58,67',
-        'img': R.appAssets.pop1,
-      },
-      {
-        'title': 'Terrex Urban Low',
-        'category': 'Hiking',
-        'price': '\$143,98',
-        'img': R.appAssets.pop2,
-      },
-    ];
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: _buildContent(height, width, pops),
+      body: _buildContent(height, width, popsSub),
     );
   }
 

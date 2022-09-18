@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/shoe_card_mini.dart';
 import 'package:shamo/R/widgets/shoe_tag.dart';
+import 'package:shamo/pages/core/subpages/home/detail/detail_product_page.dart';
 
 class AllShoesPage extends StatelessWidget {
   const AllShoesPage({
@@ -22,18 +23,27 @@ class AllShoesPage extends StatelessWidget {
         'category': 'Hiking',
         'price': '\$58,67',
         'img': R.appAssets.pop1,
+        'desc': '''Unpaved trails and mixed surfaces are easy
+when you have the traction and support you
+need. Casual enough for the daily commute.''',
       },
       {
         'title': 'Terrex Urban Low',
         'category': 'Hiking',
         'price': '\$143,98',
         'img': R.appAssets.pop2,
+        'desc': '''Unpaved trails and mixed surfaces are easy
+when you have the traction and support you
+need. Casual enough for the daily commute.''',
       },
       {
         'title': 'SL 20 Shoes',
         'category': 'Running',
         'price': '\$123,82',
         'img': R.appAssets.pop3,
+        'desc': '''Unpaved trails and mixed surfaces are easy
+when you have the traction and support you
+need. Casual enough for the daily commute.''',
       },
     ];
 
@@ -104,73 +114,86 @@ class AllShoesPage extends StatelessWidget {
               child: ListView.separated(
             physics: const BouncingScrollPhysics(),
             separatorBuilder: (context, index) {
-              return const SizedBox(width: 30);
+              return SizedBox(width: R.appMargin.defaultMargin);
             },
             scrollDirection: Axis.horizontal,
             itemCount: pops.length,
             itemBuilder: (context, index) {
               var data = pops[index];
 
-              return Padding(
-                padding: EdgeInsets.only(left: index > 0 ? 0 : 30),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    width: width * 0.50,
-                    decoration: BoxDecoration(
-                      color: R.appColors.cardColor,
-                      // color: Colors.amber,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Image.asset(
-                              data['img'],
-                              fit: BoxFit.contain,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return DetailProductPage(
+                        pop: data,
+                      );
+                    },
+                  ));
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(left: index > 0 ? 0 : 30),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: width * 0.50,
+                      decoration: BoxDecoration(
+                        color: R.appColors.cardColor,
+                        // color: Colors.amber,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Image.asset(
+                                data['img'],
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              left: 15,
-                              right: 15,
-                              bottom: 20,
-                            ),
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  data['category'],
-                                  style: R.appTextStyle.secondaryTextStyle
-                                      .copyWith(
-                                    fontSize: 12,
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                left: 15,
+                                right: 15,
+                                bottom: 20,
+                              ),
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    data['category'],
+                                    style: R.appTextStyle.secondaryTextStyle
+                                        .copyWith(
+                                      fontSize: 12,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  data['title'],
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
+                                  Text(
+                                    data['title'],
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  data['price'],
-                                  style: R.appTextStyle.priceTextStyle.copyWith(
-                                    fontWeight: FontWeight.w600,
+                                  Text(
+                                    data['price'],
+                                    style:
+                                        R.appTextStyle.priceTextStyle.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

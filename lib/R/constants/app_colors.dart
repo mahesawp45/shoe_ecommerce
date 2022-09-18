@@ -13,6 +13,6 @@ class AppColors {
   final Color darkTextColor = const Color(0xff504F5E);
   final Color textFieldColor = const Color(0xff2B2937);
   final Color darkBgColor = const Color(0xff2B2937);
-  final Color cardColor = const Color(0xffF1F0F2);
+  final Color cardColor = const Color(0xffecedef);
   final Color onlineColor = const Color(0xff51C17E);
 }

@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Stack _buildHomePage(double height, List<String> category) {
+  Widget _buildHomePage(double height, List<String> category) {
     return Stack(
       children: [
         DecorationOne(height: height, top: -150, left: 0, right: 0),

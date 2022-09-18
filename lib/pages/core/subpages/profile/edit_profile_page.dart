@@ -11,6 +11,8 @@ class EditProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     List<Map<String, dynamic>> formEditProfile = [
       {
         'label': 'Name',
@@ -38,6 +40,7 @@ class EditProfilePage extends StatelessWidget {
           ),
           child: TextField(
             cursorColor: R.appColors.primaryColor,
+            style: R.appTextStyle.primaryTextStyle,
             decoration: InputDecoration(
               label: Text(
                 formEditProfile[index]['label'],
@@ -61,6 +64,11 @@ class EditProfilePage extends StatelessWidget {
             Stack(
               children: [
                 const DecorationOne(height: 500),
+                DecorationOne(
+                    height: 500,
+                    color: R.appColors.secondaryColor.withOpacity(0.6),
+                    bottom: 0,
+                    left: width * 0.6),
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.all(R.appMargin.defaultMargin),
@@ -74,8 +82,10 @@ class EditProfilePage extends StatelessWidget {
                         ),
                         SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
-                          child: Column(
-                            children: buildEditProfileForm(),
+                          child: Expanded(
+                            child: Column(
+                              children: buildEditProfileForm(),
+                            ),
                           ),
                         ),
                       ],
