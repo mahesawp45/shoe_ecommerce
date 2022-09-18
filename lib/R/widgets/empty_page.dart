@@ -1,5 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:shamo/R/r.dart';
+import 'package:shamo/pages/core/home_page.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({
@@ -11,6 +14,7 @@ class EmptyPage extends StatelessWidget {
     required this.firstLine,
     required this.secondLine,
     required this.indexHome,
+    this.isOutFromHome,
   }) : super(key: key);
 
   final double height;
@@ -20,6 +24,7 @@ class EmptyPage extends StatelessWidget {
   final String firstLine;
   final String secondLine;
   final int indexHome;
+  final bool? isOutFromHome;
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +55,21 @@ class EmptyPage extends StatelessWidget {
           StatefulBuilder(builder: (context, setMenu) {
             return GestureDetector(
               onTap: () {
-                indexHome;
-                pageController.animateToPage(
-                  indexHome,
-                  duration: const Duration(milliseconds: 800),
-                  curve: Curves.easeInOut,
-                );
-                setMenu(() {});
+                if (isOutFromHome == true) {
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const HomePage();
+                    },
+                  ), ModalRoute.withName(HomePage.route));
+                } else {
+                  indexHome;
+                  pageController.animateToPage(
+                    indexHome,
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeInOut,
+                  );
+                  setMenu(() {});
+                }
               },
               child: Container(
                 height: 50,

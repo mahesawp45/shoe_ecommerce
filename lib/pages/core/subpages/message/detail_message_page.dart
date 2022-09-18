@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
+import 'package:shamo/R/widgets/my_button.dart';
 import 'package:shamo/R/widgets/my_header.dart';
 import 'package:shamo/R/widgets/product_send.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
@@ -59,8 +60,8 @@ class _DetailMessagePageState extends State<DetailMessagePage> {
                   ),
                   Column(
                     children: [
-                      // MessageSend(width: width, pop: pop),
-                      MessageSendProduct(pop: pop),
+                      MessageSend(width: width, pop: pop),
+                      // MessageSendProduct(pop: pop),
                       const MessageInput(),
                     ],
                   ),
@@ -168,56 +169,14 @@ class ProductSendContent extends StatelessWidget {
         SizedBox(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              ProductSendButton(label: 'Add to Cart', reverse: true),
-              SizedBox(width: 10),
-              ProductSendButton(label: 'Buy Now', reverse: false),
+            children: [
+              MyButton(label: 'Add to Cart', reverse: true, onTap: () {}),
+              const SizedBox(width: 10),
+              MyButton(label: 'Buy Now', reverse: false, onTap: () {}),
             ],
           ),
         )
       ],
-    );
-  }
-}
-
-class ProductSendButton extends StatelessWidget {
-  const ProductSendButton({
-    Key? key,
-    required this.label,
-    required this.reverse,
-  }) : super(key: key);
-
-  final String label;
-  final bool reverse;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 41,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 10,
-        ),
-        decoration: BoxDecoration(
-          border: reverse
-              ? Border.all(
-                  color: R.appColors.primaryColor,
-                )
-              : null,
-          color: reverse ? null : R.appColors.primaryColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: reverse ? R.appColors.primaryColor : R.appColors.bgColor2,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

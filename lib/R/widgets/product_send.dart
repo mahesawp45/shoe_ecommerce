@@ -134,7 +134,9 @@ class ProductTile extends StatelessWidget {
                   ),
                 )
               : isExtend == true
-                  ? const FavoriteButton()
+                  ? FavoriteButton(
+                      onTap: () {},
+                    )
                   : const SizedBox(),
         ],
       ),

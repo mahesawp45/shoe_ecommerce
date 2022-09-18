@@ -15,4 +15,6 @@ class AppColors {
   final Color darkBgColor = const Color(0xff2B2937);
   final Color cardColor = const Color(0xffecedef);
   final Color onlineColor = const Color(0xff51C17E);
+  final Color addFav = const Color(0xff38ABBE);
+  final Color removeFav = const Color(0xffED6363);
 }

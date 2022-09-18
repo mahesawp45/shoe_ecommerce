@@ -7,6 +7,7 @@ import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
 import 'package:shamo/pages/core/message_page.dart';
+import 'package:shamo/pages/core/subpages/cart/cart_page.dart';
 import 'package:shamo/pages/core/subpages/profile/profile_page.dart';
 import 'package:shamo/pages/core/subpages/sub_page_export.dart';
 
@@ -276,7 +277,9 @@ class CartFloatingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       backgroundColor: Colors.transparent,
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, CartPage.route);
+      },
       child: Container(
         height: double.infinity,
         width: double.infinity,

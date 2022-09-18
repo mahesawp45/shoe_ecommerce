@@ -6,14 +6,14 @@ import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/empty_page.dart';
 import 'package:shamo/R/widgets/my_header.dart';
 
-class WishListPage extends StatelessWidget {
-  const WishListPage({
+class CartPage extends StatelessWidget {
+  const CartPage({
     Key? key,
     this.pageController,
   }) : super(key: key);
 
   final PageController? pageController;
-  static const String route = '/wish-list-page';
+  static const String route = '/cart-page';
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,25 @@ class WishListPage extends StatelessWidget {
         body: Column(
           children: [
             MyHeader(
-              child: Center(
-                child: Text(
-                  'Favorite Shoes',
-                  style: R.appTextStyle.primaryTextStyle
-                      .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
+              child: Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: R.appMargin.defaultMargin),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.arrow_back_ios,
+                      color: R.appColors.primaryTextColor,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'Your Cart',
+                          style: R.appTextStyle.primaryTextStyle.copyWith(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -50,10 +64,11 @@ class WishListPage extends StatelessWidget {
                   DecorationOne(
                       height: height, left: 0, right: 0, bottom: -120),
                   EmptyPage(
+                    isOutFromHome: true,
                     indexHome: 0,
-                    firstLine: "You don't have dream shoes?",
+                    firstLine: "Opss! Your Cart is Empty",
                     secondLine: "Let's find your favorite shoes",
-                    iconPath: R.appAssets.favShoes,
+                    iconPath: R.appAssets.cartPage,
                     height: height,
                     pageController: pageController ?? PageController(),
                     width: width,

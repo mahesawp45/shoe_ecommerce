@@ -19,4 +19,10 @@ class AppAssets {
 
   // PROFILE
   final String logout = 'assets/Exit Button.png';
+
+  // add to cart
+  final String addToCart = 'assets/add cart.png';
+
+  // Cart
+  final String cartPage = 'assets/cart page.png';
 }

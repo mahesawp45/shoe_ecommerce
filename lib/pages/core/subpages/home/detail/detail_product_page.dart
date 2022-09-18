@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'dart:ui';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/favorite_button.dart';
-import 'package:shamo/pages/core/home_page.dart';
+import 'package:shamo/R/widgets/my_button.dart';
+import 'package:shamo/pages/core/subpages/cart/cart_page.dart';
 
 class DetailProductPage extends StatefulWidget {
   const DetailProductPage({
@@ -22,6 +25,7 @@ class DetailProductPage extends StatefulWidget {
 class _DetailProductPageState extends State<DetailProductPage> {
   double update = 0;
   int indexImage = 0;
+  bool isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -110,111 +114,14 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     width: double.infinity,
                     child: Column(
                       children: [
-                        _buildTitleProductAndFavorite(),
+                        _buildTitleProductAndFavorite(isFavorite),
                         _buildPriceProduct(width),
                         _buildDescProduct(),
                       ],
                     ),
                   ),
                   _buildFamiliarProduct(buildFamiliarShoes),
-                  Container(
-                    height: 54,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: R.appMargin.defaultMargin,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            width: 54,
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: R.appColors.primaryColor),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Image.asset(
-                              R.appAssets.chat,
-                              fit: BoxFit.contain,
-                              color: R.appColors.primaryColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 54,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      R.appColors.primaryColor,
-                                      R.appColors.priceColor,
-                                    ],
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(Icons.arrow_forward_ios,
-                                        color: Colors.grey.shade400, size: 15),
-                                    Icon(Icons.arrow_forward_ios,
-                                        color: Colors.grey.shade400, size: 15),
-                                    Icon(Icons.arrow_forward_ios,
-                                        color: Colors.grey.shade400, size: 15),
-                                    Icon(Icons.arrow_forward_ios,
-                                        color: Colors.grey.shade400, size: 15),
-                                  ],
-                                ),
-                              ),
-                              Transform.translate(
-                                offset: Offset(update, 0),
-                                child: GestureDetector(
-                                  onHorizontalDragUpdate: (details) {
-                                    if (details.localPosition.dx > 0 &&
-                                        details.localPosition.dx < width) {
-                                      setState(() {
-                                        update = details.localPosition.dx;
-                                        if (update >= (width * 0.3)) {
-                                          Navigator.pushNamed(
-                                              context, HomePage.route);
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 54,
-                                    width: width * 0.35,
-                                    margin: const EdgeInsets.all(2),
-                                    padding: const EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                      color: R.appColors.bgColor3,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Add to Cart',
-                                        style: R.appTextStyle.primaryTextStyle
-                                            .copyWith(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildBottomBar(width, context),
                 ],
               ),
             ),
@@ -222,6 +129,172 @@ class _DetailProductPageState extends State<DetailProductPage> {
         ],
       ),
     );
+  }
+
+  Container _buildBottomBar(double width, BuildContext context) {
+    return Container(
+      height: 54,
+      padding: EdgeInsets.symmetric(
+        horizontal: R.appMargin.defaultMargin,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              width: 54,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                border: Border.all(color: R.appColors.primaryColor),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.asset(
+                R.appAssets.chat,
+                fit: BoxFit.contain,
+                color: R.appColors.primaryColor,
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Stack(
+              children: [
+                Container(
+                  height: 54,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                      colors: [
+                        R.appColors.primaryColor,
+                        R.appColors.priceColor,
+                      ],
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(4, (index) {
+                      return Icon(Icons.arrow_forward_ios,
+                          color: Colors.grey.shade400, size: 15);
+                    }),
+                  ),
+                ),
+                Transform.translate(
+                  offset: Offset(update, 0),
+                  child: GestureDetector(
+                    onHorizontalDragUpdate: (details) async {
+                      await whenDrag(details, width);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(seconds: 5),
+                      height: 54,
+                      width: width * 0.35,
+                      margin: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: R.appColors.bgColor3,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Add to Cart',
+                          style: R.appTextStyle.primaryTextStyle.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  whenDrag(DragUpdateDetails detail, double width) async {
+    if (detail.localPosition.dx > 0 && detail.localPosition.dx < width) {
+      setState(() {
+        update = detail.localPosition.dx;
+      });
+      if (update >= (width * 0.29)) {
+        var res = await showDialog(
+          context: context,
+          builder: (context) {
+            var dialog = AlertDialog(
+              backgroundColor: Colors.transparent,
+              content: Stack(
+                children: [
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(
+                      height: 286,
+                      width: 315,
+                      decoration: BoxDecoration(
+                        color: R.appColors.bgColor3.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            R.appAssets.addToCart,
+                            height: 100,
+                            width: 100,
+                          ),
+                          Text(
+                            'Hurray :)',
+                            style: R.appTextStyle.primaryTextStyle.copyWith(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Item added successfully',
+                            style: R.appTextStyle.secondaryTextStyle
+                                .copyWith(fontSize: 13),
+                          ),
+                          MyButton(
+                            label: 'View My Cart',
+                            size: 44,
+                            width: 180,
+                            isWhite: true,
+                            onTap: () {
+                              Navigator.pushNamed(context, CartPage.route);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CloseButton(
+                        color: R.appColors.primaryTextColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+            return dialog;
+          },
+        );
+
+        // Kembailkan slider ke awal
+        if (res == null) {
+          setState(() {
+            update = 0;
+          });
+        }
+      }
+    }
   }
 
   Widget _buildFamiliarProduct(List<Widget> Function() buildFamiliarShoes) {
@@ -304,7 +377,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     );
   }
 
-  Row _buildTitleProductAndFavorite() {
+  Widget _buildTitleProductAndFavorite(bool isFav) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -323,9 +396,55 @@ class _DetailProductPageState extends State<DetailProductPage> {
             ),
           ],
         ),
-        const FavoriteButton(isExtend: true),
+        FavoriteButton(
+          isExtend: true,
+          isFavorite: isFavorite,
+          onTap: () {
+            setState(() {
+              isFavorite = !isFav;
+            });
+
+            showFavSnackBar();
+          },
+        ),
       ],
     );
+  }
+
+  showFavSnackBar() {
+    if (isFavorite) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Has been added to the Whitelist',
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(milliseconds: 1500),
+          backgroundColor: R.appColors.addFav,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(8),
+            ),
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Has been removed from the Whitelist',
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(milliseconds: 1500),
+          backgroundColor: R.appColors.removeFav,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(8),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Container _buildTopContentProductDetail(
