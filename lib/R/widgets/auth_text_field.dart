@@ -29,7 +29,7 @@ class AuthTextField extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 10),
             padding: const EdgeInsets.symmetric(horizontal: 15),
             decoration: BoxDecoration(
-                color: R.appColors.bgColor3,
+                color: R.appColors.bgColor2.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(10)),
             child: Row(
               children: [

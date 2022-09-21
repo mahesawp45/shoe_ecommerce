@@ -1,18 +1,21 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:shamo/R/r.dart';
-import 'package:shamo/R/widgets/favorite_button.dart';
 
-class ProductSend extends StatelessWidget {
-  const ProductSend({
+import 'package:shamo/R/r.dart';
+
+class ProductSendCard extends StatelessWidget {
+  const ProductSendCard({
     Key? key,
     required this.pop,
     this.isDeletable,
     this.isExtend,
+    this.child,
   }) : super(key: key);
 
   final Map<String, dynamic> pop;
   final bool? isDeletable;
   final bool? isExtend;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,9 @@ class ProductSend extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-          top: isDeletable == true || isExtend == true ? 20 : 0),
+        top: isDeletable == true || isExtend == true ? 10 : 0,
+        bottom: isDeletable == true || isExtend == true ? 20 : 0,
+      ),
       child: Stack(
         children: [
           isDeletable == true || isExtend == true
@@ -35,6 +40,14 @@ class ProductSend extends StatelessWidget {
                         R.appColors.secondaryColor,
                       ],
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: R.appColors.primaryColor.withOpacity(0.8),
+                        blurRadius: 15,
+                        spreadRadius: -7,
+                        offset: const Offset(0, 10),
+                      )
+                    ],
                   ),
                 )
               : const Expanded(
@@ -49,7 +62,8 @@ class ProductSend extends StatelessWidget {
                 isDeletable: isDeletable,
                 isExtend: isExtend,
                 width: width,
-                pop: pop),
+                pop: pop,
+                child: child ?? const SizedBox()),
           ),
         ],
       ),
@@ -64,12 +78,14 @@ class ProductTile extends StatelessWidget {
     required this.isExtend,
     required this.width,
     required this.pop,
+    required this.child,
   }) : super(key: key);
 
   final bool? isDeletable;
   final bool? isExtend;
   final double width;
   final Map<String, dynamic> pop;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -134,9 +150,7 @@ class ProductTile extends StatelessWidget {
                   ),
                 )
               : isExtend == true
-                  ? FavoriteButton(
-                      onTap: () {},
-                    )
+                  ? child
                   : const SizedBox(),
         ],
       ),

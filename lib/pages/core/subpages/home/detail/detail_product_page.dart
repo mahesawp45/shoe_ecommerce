@@ -36,15 +36,25 @@ class _DetailProductPageState extends State<DetailProductPage> {
     double width = size.size.width;
 
     List popImages = List.generate(3, (index) {
-      return widget.pop?['img'] ?? '';
+      return widget.pop ?? '';
     });
 
     List<Widget> buildListProductImage() {
       return List.generate(popImages.length, (index) {
-        return Image.asset(
-          popImages[index],
-          fit: BoxFit.contain,
-        );
+        if (index > 0) {
+          return Image.asset(
+            popImages[index]['img'],
+            fit: BoxFit.contain,
+          );
+        } else {
+          return Hero(
+              transitionOnUserGestures: true,
+              tag: popImages[0]['title'],
+              child: Image.asset(
+                popImages[0]['img'],
+                fit: BoxFit.contain,
+              ));
+        }
       });
     }
 
@@ -182,6 +192,11 @@ class _DetailProductPageState extends State<DetailProductPage> {
                 Transform.translate(
                   offset: Offset(update, 0),
                   child: GestureDetector(
+                    onHorizontalDragEnd: (details) {
+                      setState(() {
+                        update = details.velocity.pixelsPerSecond.dx;
+                      });
+                    },
                     onHorizontalDragUpdate: (details) async {
                       await whenDrag(details, width);
                     },

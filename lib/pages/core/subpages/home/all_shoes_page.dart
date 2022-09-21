@@ -123,20 +123,20 @@ need. Casual enough for the daily commute.''',
 
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return DetailProductPage(
-                        pop: data,
-                      );
-                    },
-                  ));
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      transitionDuration: const Duration(seconds: 1),
+                      pageBuilder: (_, __, ___) => DetailProductPage(pop: data),
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: EdgeInsets.only(left: index > 0 ? 0 : 30),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
-                      width: width * 0.50,
+                      width: 200,
                       decoration: BoxDecoration(
                         color: R.appColors.cardColor,
                         // color: Colors.amber,
@@ -146,15 +146,19 @@ need. Casual enough for the daily commute.''',
                         children: [
                           Expanded(
                             flex: 2,
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: Image.asset(
-                                data['img'],
-                                fit: BoxFit.contain,
+                            child: Hero(
+                              tag: data['title'],
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Image.asset(
+                                  data['img'],
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
                           Expanded(
+                            flex: 1,
                             child: Container(
                               padding: const EdgeInsets.only(
                                 left: 15,

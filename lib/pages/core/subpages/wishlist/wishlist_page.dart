@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
-import 'package:shamo/R/widgets/empty_page.dart';
+import 'package:shamo/R/widgets/favorite_button.dart';
 import 'package:shamo/R/widgets/my_header.dart';
+import 'package:shamo/R/widgets/page_template.dart';
+import 'package:shamo/R/widgets/product_send.dart';
 
 class WishListPage extends StatelessWidget {
   const WishListPage({
@@ -49,23 +51,26 @@ class WishListPage extends StatelessWidget {
                 children: [
                   DecorationOne(
                       height: height, left: 0, right: 0, bottom: -120),
-                  EmptyPage(
-                    indexHome: 0,
-                    firstLine: "You don't have dream shoes?",
-                    secondLine: "Let's find your favorite shoes",
-                    iconPath: R.appAssets.favShoes,
-                    height: height,
-                    pageController: pageController ?? PageController(),
-                    width: width,
-                  ),
-                  // PageTemplate(
+                  // EmptyPage(
+                  //   indexHome: 0,
+                  //   firstLine: "You don't have dream shoes?",
+                  //   secondLine: "Let's find your favorite shoes",
+                  //   iconPath: R.appAssets.favShoes,
                   //   height: height,
+                  //   pageController: pageController ?? PageController(),
                   //   width: width,
-                  //   child: ProductSend(
-                  //     pop: pop,
-                  //     isExtend: true,
-                  //   ),
                   // ),
+                  PageTemplate(
+                    height: height,
+                    width: width,
+                    child: ProductSendCard(
+                      pop: pop,
+                      isExtend: true,
+                      child: FavoriteButton(
+                        onTap: () {},
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

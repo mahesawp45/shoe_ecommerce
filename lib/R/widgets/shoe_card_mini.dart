@@ -16,12 +16,9 @@ class ShoeCardMini extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) {
-              return DetailProductPage(
-                pop: data,
-              );
-            },
+          PageRouteBuilder(
+            transitionDuration: const Duration(seconds: 1),
+            pageBuilder: (_, __, ___) => DetailProductPage(pop: data),
           ),
         );
       },

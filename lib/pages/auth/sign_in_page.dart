@@ -110,6 +110,12 @@ class _SignInPageState extends State<SignInPage> {
                               Transform.translate(
                                 offset: Offset(update, 0),
                                 child: GestureDetector(
+                                  onHorizontalDragEnd: (details) {
+                                    setState(() {
+                                      update =
+                                          details.velocity.pixelsPerSecond.dx;
+                                    });
+                                  },
                                   onHorizontalDragUpdate: (details) {
                                     if (details.localPosition.dx > 0 &&
                                         details.localPosition.dx <

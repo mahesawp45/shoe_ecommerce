@@ -60,8 +60,8 @@ class _DetailMessagePageState extends State<DetailMessagePage> {
                   ),
                   Column(
                     children: [
-                      MessageSend(width: width, pop: pop),
-                      // MessageSendProduct(pop: pop),
+                      // MessageSend(width: width, pop: pop),
+                      MessageSendProduct(pop: pop),
                       const MessageInput(),
                     ],
                   ),
@@ -164,7 +164,7 @@ class ProductSendContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ProductSend(pop: pop, isDeletable: false),
+        ProductSendCard(pop: pop, isDeletable: false),
         const SizedBox(height: 8),
         SizedBox(
           child: Row(
@@ -198,7 +198,7 @@ class MessageSendProduct extends StatelessWidget {
         reverse: true,
         itemCount: 2,
         itemBuilder: (context, index) {
-          return ProductSend(pop: pop, isDeletable: true);
+          return ProductSendCard(pop: pop, isDeletable: true);
         },
       ),
     );
