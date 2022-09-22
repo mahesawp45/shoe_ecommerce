@@ -14,4 +14,7 @@ class AppTextStyle {
 
   final TextStyle darkTextStyle =
       GoogleFonts.montserrat(color: R.appColors.darkTextColor);
+
+  final TextStyle blueTextStyle =
+      GoogleFonts.montserrat(color: R.appColors.blueTextColor);
 }

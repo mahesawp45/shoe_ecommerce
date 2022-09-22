@@ -45,28 +45,9 @@ class _CartPageState extends State<CartPage> {
         bottomNavigationBar: _buildCheckoutBottomBar(pop, update, width),
         body: Column(
           children: [
-            MyHeader(
-              child: Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: R.appMargin.defaultMargin),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_back_ios,
-                      color: R.appColors.primaryTextColor,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Your Cart',
-                          style: R.appTextStyle.primaryTextStyle.copyWith(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const MyHeader(
+              isPop: true,
+              label: 'Your Cart',
             ),
             Expanded(
               child: ListView.separated(

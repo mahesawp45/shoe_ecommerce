@@ -40,7 +40,7 @@ class _DetailMessagePageState extends State<DetailMessagePage> {
         body: Column(
           children: [
             const MyHeader(
-              child: MyHeaderDetail(),
+              customChild: MyHeaderDetail(),
             ),
             Expanded(
               child: Stack(

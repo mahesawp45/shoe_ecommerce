@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/my_header.dart';
 import 'package:shamo/R/widgets/product_send.dart';
+import 'package:shamo/pages/core/subpages/cart/checkout_success_page.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({
@@ -35,13 +36,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
       'img': R.appAssets.pop2,
     };
 
+    String price = pop['price'];
+    double total = double.parse(
+            price.split('\$').last.replaceFirstMapped(',', (match) => '.')) *
+        2;
+
     return SafeArea(
       top: true,
       bottom: false,
       child: Scaffold(
         extendBody: true,
         bottomNavigationBar: BottomAppBar(
-          color: R.appColors.bgColor3.withOpacity(0.9),
+          color: R.appColors.bgColor3.withOpacity(0.4),
           clipBehavior: Clip.antiAlias,
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -100,7 +106,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 }
 
                                 if (update > (315 - 200)) {
-                                  Navigator.pop(context);
+                                  Navigator.pushReplacementNamed(
+                                      context, CheckoutSuccessPage.route);
                                 }
                               },
                               child: Container(
@@ -131,28 +138,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ),
         body: Column(
           children: [
-            MyHeader(
-              child: Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: R.appMargin.defaultMargin),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.arrow_back_ios,
-                      color: R.appColors.primaryTextColor,
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'Checkout Details',
-                          style: R.appTextStyle.primaryTextStyle.copyWith(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const MyHeader(
+              isPop: true,
+              label: 'Checkout Details',
             ),
             Expanded(
               child: ListView(
@@ -207,15 +195,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 15),
-                    padding: const EdgeInsets.all(25),
-                    height: 186,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: R.appColors.bgColor1.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  DetailWidget(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -224,7 +204,66 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           style: R.appTextStyle.primaryTextStyle
                               .copyWith(fontSize: 16),
                         ),
-                        Container(),
+                        const SizedBox(height: 15),
+                        LocationWidget(
+                          label: 'Store Location',
+                          locationName: 'Adidas Core',
+                          icon: R.appAssets.storeLocation,
+                        ),
+                        SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Image.asset(R.appAssets.lineAddressDetail),
+                        ),
+                        LocationWidget(
+                          label: 'Your Address',
+                          locationName: 'JL Patih Nambi Gang XXVIII no 6',
+                          icon: R.appAssets.storeLocation,
+                        ),
+                      ],
+                    ),
+                  ),
+                  DetailWidget(
+                    secondColor: R.appColors.priceColor.withOpacity(0.1),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Payment Summary',
+                          style: R.appTextStyle.primaryTextStyle
+                              .copyWith(fontSize: 16),
+                        ),
+                        const SizedBox(height: 10),
+                        Column(
+                          children: [
+                            Column(
+                              children: [
+                                const PayementSummaryWidget(
+                                  label: 'Product Quantity',
+                                  amount: '2 Items',
+                                ),
+                                PayementSummaryWidget(
+                                  label: 'Product Price',
+                                  amount: "\$$total",
+                                  // amount: pop['price'],
+                                ),
+                                const PayementSummaryWidget(
+                                  label: 'Shipping',
+                                  amount: 'Free',
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              color: R.appColors.secondaryTextColor
+                                  .withOpacity(0.6),
+                            ),
+                            PayementSummaryWidget(
+                              isTotal: true,
+                              label: 'Total',
+                              amount: "\$$total",
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -233,6 +272,126 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PayementSummaryWidget extends StatelessWidget {
+  const PayementSummaryWidget({
+    Key? key,
+    required this.label,
+    required this.amount,
+    this.isTotal,
+  }) : super(key: key);
+
+  final String label;
+  final String amount;
+  final bool? isTotal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: isTotal == true
+                ? R.appTextStyle.blueTextStyle
+                    .copyWith(fontWeight: FontWeight.bold)
+                : R.appTextStyle.secondaryTextStyle.copyWith(fontSize: 12),
+          ),
+          Text(
+            amount,
+            style: isTotal == true
+                ? R.appTextStyle.blueTextStyle
+                    .copyWith(fontWeight: FontWeight.bold)
+                : R.appTextStyle.primaryTextStyle,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DetailWidget extends StatelessWidget {
+  const DetailWidget({
+    Key? key,
+    required this.child,
+    this.secondColor,
+  }) : super(key: key);
+
+  final Widget child;
+  final Color? secondColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 15),
+      padding: const EdgeInsets.all(20),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            R.appColors.bgColor1.withOpacity(0.4),
+            secondColor ?? R.appColors.primaryColor.withOpacity(0.15),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
+}
+
+class LocationWidget extends StatelessWidget {
+  const LocationWidget({
+    Key? key,
+    required this.label,
+    required this.locationName,
+    required this.icon,
+  }) : super(key: key);
+
+  final String label;
+  final String locationName;
+  final String icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: R.appColors.bgColor4.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Image.asset(
+              icon,
+            ),
+          ),
+          const SizedBox(width: 15),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: R.appTextStyle.darkTextStyle.copyWith(fontSize: 12),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                locationName,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: R.appTextStyle.primaryTextStyle,
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

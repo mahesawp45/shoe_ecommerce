@@ -108,7 +108,7 @@ class ProfilePage extends StatelessWidget {
         children: [
           MyHeader(
             isProfile: true,
-            child: _buildProfileHeader(),
+            customChild: _buildProfileHeader(context),
           ),
           Expanded(
             flex: 5,
@@ -151,16 +151,30 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(BuildContext context) {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 50, sigmaY: 130),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          UserProfileAvatar(
-            img: R.appAssets.profile,
-            isUser: true,
-            size: 64,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 500),
+                  pageBuilder: (_, __, ___) => const EditProfilePage(),
+                ),
+              );
+            },
+            child: Hero(
+              tag: 'profile',
+              child: UserProfileAvatar(
+                img: R.appAssets.profile,
+                isUser: true,
+                size: 64,
+              ),
+            ),
           ),
           Expanded(
             child: Padding(

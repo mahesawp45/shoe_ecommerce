@@ -27,4 +27,6 @@ class AppAssets {
   final String cartPage = 'assets/cart page.png';
   final String removeFromCart = 'assets/Subtract.png';
   final String storeLocation = 'assets/Building Icon.png';
+  final String lineAddressDetail = 'assets/Line 1.png';
+  final String location = 'assets/Location.png';
 }

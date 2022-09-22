@@ -5,6 +5,7 @@ import 'package:shamo/pages/core/home_page.dart';
 import 'package:shamo/pages/core/message_page.dart';
 import 'package:shamo/pages/core/subpages/cart/cart_page.dart';
 import 'package:shamo/pages/core/subpages/cart/checkout_page.dart';
+import 'package:shamo/pages/core/subpages/cart/checkout_success_page.dart';
 import 'package:shamo/pages/core/subpages/home/detail/detail_product_page.dart';
 import 'package:shamo/pages/core/subpages/profile/edit_profile_page.dart';
 import 'package:shamo/pages/core/subpages/profile/profile_page.dart';
@@ -89,6 +90,13 @@ class AppRoute {
         return MaterialPageRoute(
           builder: (context) {
             return const CheckoutPage();
+          },
+        );
+
+      case CheckoutSuccessPage.route:
+        return MaterialPageRoute(
+          builder: (context) {
+            return const CheckoutSuccessPage();
           },
         );
 

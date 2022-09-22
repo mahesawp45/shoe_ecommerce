@@ -8,23 +8,29 @@ class EmptyPage extends StatelessWidget {
   const EmptyPage({
     Key? key,
     required this.height,
-    required this.pageController,
+    this.pageController,
     required this.width,
     required this.iconPath,
     required this.firstLine,
     required this.secondLine,
     required this.indexHome,
     this.isOutFromHome,
+    this.otherLabelButton,
+    this.otherLabelButton2,
+    this.isMultiButton,
   }) : super(key: key);
 
   final double height;
-  final PageController pageController;
+  final PageController? pageController;
   final double width;
   final String iconPath;
   final String firstLine;
   final String secondLine;
   final int indexHome;
   final bool? isOutFromHome;
+  final String? otherLabelButton;
+  final String? otherLabelButton2;
+  final bool? isMultiButton;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,8 @@ class EmptyPage extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             secondLine,
-            style: R.appTextStyle.secondaryTextStyle,
+            textAlign: TextAlign.center,
+            style: R.appTextStyle.secondaryTextStyle.copyWith(height: 2),
           ),
           const SizedBox(height: 30),
           StatefulBuilder(builder: (context, setMenu) {
@@ -63,7 +70,7 @@ class EmptyPage extends StatelessWidget {
                   ), ModalRoute.withName(HomePage.route));
                 } else {
                   indexHome;
-                  pageController.animateToPage(
+                  pageController?.animateToPage(
                     indexHome,
                     duration: const Duration(milliseconds: 800),
                     curve: Curves.easeInOut,
@@ -73,7 +80,7 @@ class EmptyPage extends StatelessWidget {
               },
               child: Container(
                 height: 50,
-                width: width * 0.4,
+                width: otherLabelButton != null ? 196 : 152,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
@@ -93,13 +100,33 @@ class EmptyPage extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'Explore Store',
+                    otherLabelButton ?? 'Explore Store',
                     style: R.appTextStyle.primaryTextStyle,
                   ),
                 ),
               ),
             );
           }),
+          const SizedBox(height: 20),
+          isMultiButton == true
+              ? GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    height: 50,
+                    width: otherLabelButton2 != null ? 196 : 152,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: R.appColors.bgColor1,
+                    ),
+                    child: Center(
+                      child: Text(
+                        otherLabelButton2 ?? 'Explore Store',
+                        style: R.appTextStyle.primaryTextStyle,
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
           const Spacer(flex: 2),
         ],
       ),

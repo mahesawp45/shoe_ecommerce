@@ -59,7 +59,7 @@ class EditProfilePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             MyHeader(
-              child: _buildEditProfilePage(context),
+              customChild: _buildEditProfilePage(context),
             ),
             Stack(
               children: [
@@ -75,10 +75,13 @@ class EditProfilePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        UserProfileAvatar(
-                          size: 100,
-                          img: R.appAssets.profile,
-                          isUser: true,
+                        Hero(
+                          tag: 'profile',
+                          child: UserProfileAvatar(
+                            size: 100,
+                            img: R.appAssets.profile,
+                            isUser: true,
+                          ),
                         ),
                         SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),

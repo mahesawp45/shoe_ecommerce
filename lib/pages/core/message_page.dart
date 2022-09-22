@@ -29,14 +29,8 @@ class MessagePage extends StatelessWidget {
         extendBody: true,
         body: Column(
           children: [
-            MyHeader(
-              child: Center(
-                child: Text(
-                  'Message Support',
-                  style: R.appTextStyle.primaryTextStyle
-                      .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
+            const MyHeader(
+              label: 'Message Support',
             ),
             Expanded(
               child: Stack(
