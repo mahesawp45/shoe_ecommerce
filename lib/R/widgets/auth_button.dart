@@ -1,14 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:shamo/R/r.dart';
 
 class AuthButton extends StatelessWidget {
   const AuthButton({
     Key? key,
     required this.size,
+    required this.isLoading,
     required this.title,
   }) : super(key: key);
 
   final double size;
+  final bool isLoading;
   final String title;
 
   @override
@@ -36,11 +40,17 @@ class AuthButton extends StatelessWidget {
       ),
       child: FittedBox(
         child: Center(
-          child: Text(
-            title,
-            style: R.appTextStyle.primaryTextStyle
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
+          child: isLoading
+              ? CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor:
+                      AlwaysStoppedAnimation(R.appColors.primaryTextColor),
+                )
+              : Text(
+                  title,
+                  style: R.appTextStyle.primaryTextStyle
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
         ),
       ),
     );

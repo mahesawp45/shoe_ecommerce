@@ -1,8 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/routes/app_routes.dart';
+import 'package:shamo/providers/user_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -12,11 +17,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Shamo',
-      debugShowCheckedModeBanner: false,
-      theme: R.appTheme.getTheme(isDark: true),
-      onGenerateRoute: AppRoute.allRoute,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Shamo',
+        debugShowCheckedModeBanner: false,
+        theme: R.appTheme.getTheme(isDark: true),
+        onGenerateRoute: AppRoute.allRoute,
+      ),
     );
   }
 }

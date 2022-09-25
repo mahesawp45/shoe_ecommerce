@@ -218,7 +218,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         LocationWidget(
                           label: 'Your Address',
                           locationName: 'JL Patih Nambi Gang XXVIII no 6',
-                          icon: R.appAssets.storeLocation,
+                          icon: R.appAssets.location,
                         ),
                       ],
                     ),

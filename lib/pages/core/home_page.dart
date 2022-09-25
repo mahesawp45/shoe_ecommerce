@@ -2,14 +2,17 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
+import 'package:shamo/models/user_model.dart';
 import 'package:shamo/pages/core/message_page.dart';
 import 'package:shamo/pages/core/subpages/cart/cart_page.dart';
 import 'package:shamo/pages/core/subpages/profile/profile_page.dart';
 import 'package:shamo/pages/core/subpages/sub_page_export.dart';
+import 'package:shamo/providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +24,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late UserProvider userProvider;
+  late User user;
+
   final ScrollController _controller = ScrollController();
   final PageController _pageController = PageController();
   final PageController _pageControllerHome = PageController();
@@ -47,6 +53,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     whenScroll();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+    user = userProvider.user;
     super.initState();
   }
 
@@ -85,7 +93,9 @@ class _HomePageState extends State<HomePage> {
         Column(
           children: [
             const SizedBox(height: 30),
-            const HeaderBar(),
+            HeaderBar(
+              user: user,
+            ),
             Expanded(
               child: Column(
                 children: [
@@ -232,7 +242,10 @@ class _HomePageState extends State<HomePage> {
 class HeaderBar extends StatelessWidget {
   const HeaderBar({
     Key? key,
+    required this.user,
   }) : super(key: key);
+
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -241,23 +254,31 @@ class HeaderBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Hallo, Alex',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Hallo, ${user.name ?? '-'} ",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                '@alex',
-                style: R.appTextStyle.darkTextStyle,
-              ),
-            ],
+                const SizedBox(height: 3),
+                Text(
+                  "@${user.username ?? '-'}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: R.appTextStyle.darkTextStyle,
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 10),
           UserProfileAvatar(
             img: R.appAssets.profile,
             isUser: true,

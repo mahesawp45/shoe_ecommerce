@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "138207992642",
+    "project_id": "flutter-shamo-6a0f2",
+    "storage_bucket": "flutter-shamo-6a0f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138207992642:android:e80bd47f6e2b7e46c5c6db",
+        "android_client_info": {
+          "package_name": "com.example.shamo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138207992642-2ku1tfp6o4mrvijtnigapv0fb9ot1028.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shamo",
+            "certificate_hash": "0683d3b5566ada429c26fef3a222a5f9e5bd4576"
+          }
+        },
+        {
+          "client_id": "138207992642-n6nl9hh55n14jpu1sb560r8dpnsmscq9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKwd8lHDkZVw8vbCBut_oxFcwpAYqHT2A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138207992642-n6nl9hh55n14jpu1sb560r8dpnsmscq9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
