@@ -1,19 +1,24 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/material.dart';
 
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/shoe_card_mini.dart';
 import 'package:shamo/R/widgets/shoe_tag.dart';
 import 'package:shamo/pages/core/subpages/home/detail/detail_product_page.dart';
+import 'package:shamo/providers/product_provider.dart';
 
 class AllShoesPage extends StatelessWidget {
   const AllShoesPage({
     Key? key,
     required this.scrollController,
+    required this.products,
   }) : super(key: key);
 
   static const String route = '/all-shoes-page';
   final ScrollController scrollController;
+
+  final ProductProvider products;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +67,7 @@ need. Casual enough for the daily commute.''',
       padding: EdgeInsets.zero,
       physics: const BouncingScrollPhysics(),
       children: [
-        _buildPopularProduct(height, pops, width),
+        _buildPopularProduct(height, products, width),
         _buildNewArrivals(pops),
       ],
     );
@@ -97,7 +102,7 @@ need. Casual enough for the daily commute.''',
   }
 
   SizedBox _buildPopularProduct(
-      double height, List<Map<String, dynamic>> pops, double width) {
+      double height, ProductProvider productProvider, double width) {
     return SizedBox(
       height: height * 0.36,
       width: double.infinity,
@@ -117,91 +122,101 @@ need. Casual enough for the daily commute.''',
               return SizedBox(width: R.appMargin.defaultMargin);
             },
             scrollDirection: Axis.horizontal,
-            itemCount: pops.length,
+            itemCount: productProvider.products.length,
             itemBuilder: (context, index) {
-              var data = pops[index];
+              var data = productProvider.products[index];
 
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      transitionDuration: const Duration(seconds: 1),
-                      pageBuilder: (_, __, ___) => DetailProductPage(pop: data),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(left: index > 0 ? 0 : 30),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: 200,
-                      decoration: BoxDecoration(
-                        color: R.appColors.cardColor,
-                        // color: Colors.amber,
+              if ((data.id ?? 0) <= 5) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        transitionDuration: const Duration(seconds: 1),
+                        pageBuilder: (_, __, ___) => const DetailProductPage(),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Hero(
-                              tag: data['title'],
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Image.asset(
-                                  data['img'],
-                                  fit: BoxFit.contain,
+                    );
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: index > 0 ? 0 : 30),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: R.appColors.cardColor,
+                          // color: Colors.amber,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Hero(
+                                tag: data.name ?? '-',
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: data.gallery != null
+                                      ? Image.network(
+                                          (data.gallery ?? [])[0]
+                                              .url
+                                              .toString(),
+                                          fit: BoxFit.contain,
+                                        )
+                                      : Image.asset(R.appAssets.pop3),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                left: 15,
-                                right: 15,
-                                bottom: 20,
-                              ),
-                              width: double.infinity,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    data['category'],
-                                    style: R.appTextStyle.secondaryTextStyle
-                                        .copyWith(
-                                      fontSize: 12,
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                  left: 15,
+                                  right: 15,
+                                  bottom: 20,
+                                ),
+                                width: double.infinity,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      data.category?.name ?? '-',
+                                      style: R.appTextStyle.secondaryTextStyle
+                                          .copyWith(
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    data['title'],
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
+                                    Text(
+                                      data.name ?? '-',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    data['price'],
-                                    style:
-                                        R.appTextStyle.priceTextStyle.copyWith(
-                                      fontWeight: FontWeight.w600,
+                                    Text(
+                                      (data.price ?? 0).toString(),
+                                      style: R.appTextStyle.priceTextStyle
+                                          .copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
+                );
+              } else {
+                return const SizedBox();
+              }
             },
           )),
         ],

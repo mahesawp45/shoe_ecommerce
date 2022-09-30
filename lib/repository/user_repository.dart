@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class UserRepository {
   /// Register
-  Future<User> postRegister({required Map<String, dynamic> data}) async {
+  Future<UserModel> postRegister({required Map<String, dynamic> data}) async {
     const String url = UserURL.register;
 
     Map<String, String> headers = const {'Content-Type': 'application/json'};
@@ -21,12 +21,13 @@ class UserRepository {
 
     try {
       if (response.statusCode == 200) {
-        var result = jsonDecode(response.body)['data']['user'];
+        var result = jsonDecode(response.body)['data'];
 
-        User user = User.fromJson(result);
+        UserModel user = UserModel.fromJson(result);
+
         return user;
       } else {
-        throw jsonDecode(response.body)['data']['message'];
+        throw jsonDecode(response.body)['meta']['message'];
       }
     } catch (e) {
       rethrow;
@@ -34,7 +35,7 @@ class UserRepository {
   }
 
   /// Login
-  Future<User> postLogin({required Map<String, dynamic> data}) async {
+  Future<UserModel> postLogin({required Map<String, dynamic> data}) async {
     const String url = UserURL.login;
 
     Map<String, String> headers = const {'Content-Type': 'application/json'};
@@ -46,13 +47,13 @@ class UserRepository {
           await http.post(Uri.parse(url), body: body, headers: headers);
 
       if (response.statusCode == 200) {
-        var result = jsonDecode(response.body)['data']['user'];
+        var result = jsonDecode(response.body)['data'];
 
-        User user = User.fromJson(result);
+        UserModel user = UserModel.fromJson(result);
 
         return user;
       } else {
-        throw jsonDecode(response.body)['data']['message'];
+        throw jsonDecode(response.body)['meta']['message'];
       }
     } catch (e) {
       rethrow;

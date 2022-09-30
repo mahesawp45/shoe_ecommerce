@@ -13,7 +13,7 @@ import 'package:shamo/pages/core/subpages/sub_page_export.dart';
 import 'package:shamo/pages/error_page.dart';
 import 'package:shamo/pages/splash_page.dart';
 
-class AppRoute {
+abstract class AppRoute {
   static Route allRoute(RouteSettings settings) {
     switch (settings.name) {
       case SplashPage.route:

@@ -7,11 +7,15 @@ import 'package:provider/provider.dart';
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
+import 'package:shamo/helpers/user_helpers.dart';
+import 'package:shamo/models/category_model.dart';
 import 'package:shamo/models/user_model.dart';
 import 'package:shamo/pages/core/message_page.dart';
 import 'package:shamo/pages/core/subpages/cart/cart_page.dart';
 import 'package:shamo/pages/core/subpages/profile/profile_page.dart';
 import 'package:shamo/pages/core/subpages/sub_page_export.dart';
+import 'package:shamo/providers/category_provider.dart';
+import 'package:shamo/providers/product_provider.dart';
 import 'package:shamo/providers/user_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,7 +29,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late UserProvider userProvider;
-  late User user;
+  late UserModel user;
+
+  late CategoryProvider categoryProvider;
+  late ProductProvider productProvider;
 
   final ScrollController _controller = ScrollController();
   final PageController _pageController = PageController();
@@ -33,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
   int indexHome = 0;
 
-  bool closeTopContainer = false;
+  bool isCloseTopContainer = false;
   double topContainer = 0;
 
   whenScroll() {
@@ -45,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         topContainer = value;
 
         // nyari value scroll
-        closeTopContainer = _controller.offset > 50 ? true : false;
+        isCloseTopContainer = _controller.offset > 50 ? true : false;
       });
     });
   }
@@ -55,14 +62,19 @@ class _HomePageState extends State<HomePage> {
     whenScroll();
     userProvider = Provider.of<UserProvider>(context, listen: false);
     user = userProvider.user;
+
+    categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
+    productProvider = Provider.of<ProductProvider>(context, listen: false);
+
+    // Pindahin ini ke splash screen
+    // getCategoriesHandler();
+    // getProductsHandler();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-
-    List<String> category = ['All Shoes', 'Running', 'Training', 'Basketball'];
 
     return Scaffold(
       extendBody: true,
@@ -77,7 +89,13 @@ class _HomePageState extends State<HomePage> {
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageControllerHome,
         children: [
-          _buildHomePage(height, category),
+          Consumer<CategoryProvider>(
+              builder: (context, categoryProvider, child) {
+            return Consumer<ProductProvider>(
+                builder: (context, productProvider, child) {
+              return _buildHomePage(height, categoryProvider, productProvider);
+            });
+          }),
           MessagePage(pageController: _pageControllerHome),
           WishListPage(pageController: _pageControllerHome),
           ProfilePage(pageController: _pageControllerHome),
@@ -86,7 +104,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHomePage(double height, List<String> category) {
+  Widget _buildHomePage(
+      double height, CategoryProvider category, ProductProvider product) {
     return Stack(
       children: [
         DecorationOne(height: height, top: -150, left: 0, right: 0),
@@ -94,21 +113,24 @@ class _HomePageState extends State<HomePage> {
           children: [
             const SizedBox(height: 30),
             HeaderBar(
-              user: user,
+              user: user.user,
             ),
             Expanded(
               child: Column(
                 children: [
-                  _buildCategoryIndicator(category, _pageController),
+                  _buildCategoryIndicator(category.categories, _pageController),
                   Expanded(
                     child: PageView(
                       scrollDirection: Axis.horizontal,
                       controller: _pageController,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
-                        AllShoesPage(scrollController: _controller),
+                        AllShoesPage(
+                            scrollController: _controller, products: product),
                         RunningPage(scrollController: _controller),
                         TrainingPage(scrollController: _controller),
+                        BasketPage(scrollController: _controller),
+                        BasketPage(scrollController: _controller),
                         BasketPage(scrollController: _controller),
                       ],
                     ),
@@ -123,11 +145,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildCategoryIndicator(
-      List<String> category, PageController pageController) {
+      List<Category> category, PageController pageController) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       // padding: const EdgeInsets.only(bottom: 5),
-      height: closeTopContainer ? 0 : 110,
+      height: isCloseTopContainer ? 0 : 112,
       child: ListView(
         clipBehavior: Clip.none,
         padding: const EdgeInsets.all(10),
@@ -148,7 +170,7 @@ class _HomePageState extends State<HomePage> {
             child: Transform.translate(
               offset: Offset(0, index == ind ? -15 : 0),
               child: AnimatedContainer(
-                width: closeTopContainer ? 0 : 70,
+                width: isCloseTopContainer ? 0 : 70,
                 padding: const EdgeInsets.only(
                   top: 10,
                   right: 10,
@@ -184,48 +206,48 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Expanded(
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        width: closeTopContainer ? 0 : 35,
-                        decoration: BoxDecoration(
-                          color: index != ind
-                              ? Colors.purple.withOpacity(0.15)
-                              : Colors.purple.shade900,
-                          borderRadius: BorderRadius.circular(500),
-                          boxShadow: [
-                            index != ind
-                                ? const BoxShadow()
-                                : BoxShadow(
-                                    blurStyle: BlurStyle.inner,
-                                    blurRadius: 30,
-                                    spreadRadius: 6,
-                                    color: Colors.black.withOpacity(0.25),
-                                    offset: const Offset(0, 0),
-                                  ),
-                          ],
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 100),
+                        opacity: isCloseTopContainer ? 0 : 1,
+                        child: Container(
+                          width: isCloseTopContainer ? 0 : 35,
+                          decoration: BoxDecoration(
+                            color: index != ind
+                                ? Colors.purple.withOpacity(0.15)
+                                : Colors.purple.shade900,
+                            borderRadius: BorderRadius.circular(500),
+                            boxShadow: [
+                              index != ind
+                                  ? const BoxShadow()
+                                  : BoxShadow(
+                                      blurStyle: BlurStyle.inner,
+                                      blurRadius: 30,
+                                      spreadRadius: 6,
+                                      color: Colors.black.withOpacity(0.25),
+                                      offset: const Offset(0, 0),
+                                    ),
+                            ],
+                          ),
+                          child: index != ind
+                              ? null
+                              : Icon(
+                                  Icons.radio_button_checked_sharp,
+                                  color: Colors.white.withOpacity(0.7),
+                                  size: isCloseTopContainer ? 0 : 24,
+                                ),
                         ),
-                        child: index != ind
-                            ? null
-                            : Icon(
-                                category[ind] == 'All Shoes'
-                                    ? Icons.radio_button_checked_sharp
-                                    : category[ind] == 'Running'
-                                        ? Icons.run_circle
-                                        : category[ind] == 'Training'
-                                            ? Icons.sports_gymnastics
-                                            : Icons.sports_basketball,
-                                color: Colors.white.withOpacity(0.7),
-                                size: closeTopContainer ? 0 : 24,
-                              ),
                       ),
                     ),
+                    const SizedBox(height: 12),
                     Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(category[ind],
-                            style: index != ind
-                                ? R.appTextStyle.darkTextStyle
-                                : R.appTextStyle.primaryTextStyle),
+                      child: Text(
+                        category[ind].name.toString(),
+                        textAlign: TextAlign.center,
+                        style: index != ind
+                            ? R.appTextStyle.darkTextStyle.copyWith(
+                                fontSize: isCloseTopContainer ? 0 : 10)
+                            : R.appTextStyle.primaryTextStyle.copyWith(
+                                fontSize: isCloseTopContainer ? 0 : 10),
                       ),
                     ),
                   ],
@@ -245,7 +267,7 @@ class HeaderBar extends StatelessWidget {
     required this.user,
   }) : super(key: key);
 
-  final User user;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -259,7 +281,7 @@ class HeaderBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Hallo, ${user.name ?? '-'} ",
+                  "Hallo, ${user?.name ?? UserHelpers.getUserDisplayName()} ",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: const TextStyle(
@@ -270,7 +292,7 @@ class HeaderBar extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  "@${user.username ?? '-'}",
+                  "@${user?.username ?? UserHelpers.getUserUid()}",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: R.appTextStyle.darkTextStyle,

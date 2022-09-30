@@ -4,12 +4,12 @@ import 'package:shamo/models/user_model.dart';
 import 'package:shamo/repository/user_repository.dart';
 
 class UserProvider with ChangeNotifier {
-  User? _user;
+  UserModel? _user;
   bool _isVisible = true;
 
-  User get user => _user ?? User();
+  UserModel get user => _user ?? UserModel();
 
-  set user(User user) {
+  set user(UserModel user) {
     _user = user;
     notifyListeners();
   }

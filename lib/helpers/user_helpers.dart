@@ -15,4 +15,9 @@ abstract class UserHelpers {
     final user = FirebaseAuth.instance.currentUser;
     return user?.photoURL ?? '';
   }
+
+  static String? getUserUid() {
+    final user = FirebaseAuth.instance.currentUser;
+    return user?.uid;
+  }
 }

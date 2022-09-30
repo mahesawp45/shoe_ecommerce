@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/routes/app_routes.dart';
+import 'package:shamo/providers/category_provider.dart';
+import 'package:shamo/providers/product_provider.dart';
 import 'package:shamo/providers/user_provider.dart';
 
 void main() async {
@@ -20,6 +22,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => CategoryProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
       ],
       child: MaterialApp(
         title: 'Shamo',
