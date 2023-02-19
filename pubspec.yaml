@@ -11,13 +11,12 @@ environment:
 dependencies:
   carousel_slider: ^4.1.1
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.10.0
-  firebase_core: ^1.23.0
   flutter:
     sdk: flutter
   google_fonts: ^3.0.1
-  google_sign_in: ^5.4.2
+  hive: ^2.2.3
   http: ^0.13.5
+  path_provider: ^2.0.12
   provider: ^6.0.3
 
 dev_dependencies:

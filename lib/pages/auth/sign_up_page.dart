@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/r_export.dart';
+import 'package:shamo/R/widgets/auth_slide_button.dart';
 import 'package:shamo/pages/auth/sign_in_page.dart';
 import 'package:shamo/providers/user_provider.dart';
 
@@ -55,16 +56,26 @@ class _SignUpPageState extends State<SignUpPage> {
       isLoading = true;
     });
 
-    if (await userProvider.isRegister(context, payload: {
-      'name': fullNameC.text,
-      'username': userNameC.text,
-      'email': emailC.text,
-      'password': passC.text,
-    })) {
-      Navigator.pushReplacementNamed(context, SignInPage.route);
-    } else {
-      // Snackbar ada di provider
-      log('Error');
+    try {
+      if (await userProvider.isRegister(context, payload: {
+        'name': fullNameC.text,
+        'username': userNameC.text,
+        'email': emailC.text,
+        'password': passC.text,
+      })) {
+        Navigator.pushReplacementNamed(context, SignInPage.route);
+      } else {
+        // Snackbar ada di provider
+        log('Error');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: R.appColors.removeFav,
+          content: Text(e.toString()),
+        ),
+      );
     }
 
     setState(() {
@@ -135,55 +146,38 @@ class _SignUpPageState extends State<SignUpPage> {
                     );
                   }),
                   const SizedBox(height: 30),
-                  SizedBox(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: width,
-                          height: height * 0.07,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.grey.withOpacity(0.03),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: List.generate(
-                                4,
-                                (index) => Icon(Icons.arrow_forward_ios,
-                                    color: Colors.grey.shade900, size: 15)),
-                          ),
-                        ),
-                        Transform.translate(
-                          offset: Offset(update, 0),
-                          child: GestureDetector(
-                            onHorizontalDragEnd: (details) async {
-                              if (update >= (width * 0.68)) {
-                                await registerHandler();
+                  AuthSlideButton(
+                    label: 'Sign Up',
+                    width: width,
+                    update: update,
+                    isLoading: isLoading,
+                    updateDrag: (details) {
+                      double maxLength =
+                          (width.floor() - (R.appMargin.defaultMargin * 4));
 
-                                setState(() {
-                                  update = 0;
-                                });
-                              }
-                              setState(() {
-                                update = 0;
-                              });
-                            },
-                            onHorizontalDragUpdate: (details) {
-                              if (details.localPosition.dx > 0 &&
-                                  details.localPosition.dx < (width * 0.7)) {
-                                setState(() {
-                                  update = details.localPosition.dx;
-                                });
-                              }
-                            },
-                            child: AuthButton(
-                                isLoading: isLoading,
-                                title: 'Sign Up',
-                                size: height * 0.07),
-                          ),
-                        ),
-                      ],
-                    ),
+                      if (details.localPosition.dx > 0 &&
+                          details.localPosition.dx < maxLength) {
+                        setState(() {
+                          update = details.localPosition.dx;
+                        });
+                      }
+                    },
+                    endDrag: (details) async {
+                      double maxLength =
+                          (width.floor() - (R.appMargin.defaultMargin * 4));
+
+                      if (update.floor() >= maxLength.floor() ||
+                          update.floor() >= (maxLength.floor() - 3)) {
+                        await registerHandler();
+
+                        setState(() {
+                          update = 0;
+                        });
+                      }
+                      setState(() {
+                        update = 0;
+                      });
+                    },
                   ),
                   const Spacer(),
                   Container(
@@ -203,7 +197,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             shadowColor: Colors.transparent,
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, SignInPage.route);
+                            Navigator.pop(context);
                           },
                           child: Text(
                             "Log in",

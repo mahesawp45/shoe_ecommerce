@@ -4,18 +4,20 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/favorite_button.dart';
 import 'package:shamo/R/widgets/my_button.dart';
+import 'package:shamo/models/product_model.dart';
 import 'package:shamo/pages/core/subpages/cart/cart_page.dart';
 
 class DetailProductPage extends StatefulWidget {
   const DetailProductPage({
     Key? key,
-    this.pop,
+    this.product,
   }) : super(key: key);
 
-  final Map<String, dynamic>? pop;
+  final Product? product;
   static const String route = 'detail-product';
 
   @override
@@ -35,8 +37,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
     double width = size.size.width;
 
-    List popImages = List.generate(3, (index) {
-      return widget.pop ?? '';
+    List popImages = List.generate(0, (index) {
+      return widget.product?.gallery ?? '';
     });
 
     List<Widget> buildListProductImage() {
@@ -87,7 +89,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Image.asset(
-            widget.pop?['img'],
+            // widget.pop?['img'],
+            '/',
             fit: BoxFit.contain,
           ),
         );
@@ -353,7 +356,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
           ),
           const SizedBox(height: 10),
           Text(
-            widget.pop?['desc'] ?? 'No Description',
+            // widget.pop?['desc'] ?? 'No Description',
+            '',
             maxLines: 3,
             overflow: TextOverflow.clip,
             style: R.appTextStyle.darkTextStyle.copyWith(
@@ -383,7 +387,8 @@ class _DetailProductPageState extends State<DetailProductPage> {
             style: R.appTextStyle.primaryTextStyle,
           ),
           Text(
-            widget.pop?['price'],
+            // widget.pop?['price'],
+            '',
             style: R.appTextStyle.priceTextStyle
                 .copyWith(fontWeight: FontWeight.bold),
           ),
@@ -400,13 +405,15 @@ class _DetailProductPageState extends State<DetailProductPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.pop?['title'],
+              // widget.pop?['title'],
+              '',
               style: R.appTextStyle.primaryTextStyle
                   .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(
-              widget.pop?['category'],
+              // widget.pop?['category'],
+              '',
               style: R.appTextStyle.secondaryTextStyle.copyWith(fontSize: 12),
             ),
           ],

@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/shoe_card_mini.dart';
 import 'package:shamo/R/widgets/shoe_tag.dart';
-import 'package:shamo/data_dummy.dart';
+import 'package:shamo/models/product_model.dart';
 
 class TrainingPage extends StatelessWidget {
   const TrainingPage({
     Key? key,
     required this.scrollController,
+    this.products,
   }) : super(key: key);
 
   static const String route = '/training-shoes-page';
   final ScrollController scrollController;
+  final List<Product>? products;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +23,11 @@ class TrainingPage extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: _buildContent(height, width, popsSub),
+      body: _buildContent(height, width, products ?? []),
     );
   }
 
-  Widget _buildContent(
-      double height, double width, List<Map<String, dynamic>> pops) {
+  Widget _buildContent(double height, double width, List<Product> data) {
     return Padding(
       padding: EdgeInsets.only(left: R.appMargin.defaultMargin),
       child: Column(
@@ -37,9 +38,9 @@ class TrainingPage extends StatelessWidget {
             child: ListView(
               padding: EdgeInsets.zero,
               physics: const BouncingScrollPhysics(),
-              children: List.generate(pops.length, (index) {
-                var data = pops[index];
-                return ShoeCardMini(data: data);
+              children: List.generate(products?.length ?? 0, (index) {
+                var data = products?[index];
+                return ShoeCardMini(product: data);
               }),
             ),
           ),

@@ -12,7 +12,7 @@ class ShoeTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20, top: 25),
+      padding: const EdgeInsets.only(bottom: 20, top: 20),
       child: Text(
         title,
         style: R.appTextStyle.primaryTextStyle.copyWith(

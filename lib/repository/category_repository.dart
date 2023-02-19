@@ -23,7 +23,7 @@ abstract class CategoryRepository {
           categories.add(Category.fromJson(elem));
         }
 
-        log('INI CATEGORY => ${categories.map((e) => e.products)}');
+        log('INI CATEGORY => ${categories.map((e) => e.name)}');
 
         return categories;
       } else {

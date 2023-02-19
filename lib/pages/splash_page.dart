@@ -4,9 +4,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shamo/R/r.dart';
+import 'package:shamo/models/user_model.dart';
 import 'package:shamo/pages/auth/sign_in_page.dart';
+import 'package:shamo/pages/core/home_page.dart';
 import 'package:shamo/providers/category_provider.dart';
 import 'package:shamo/providers/product_provider.dart';
+import 'package:shamo/providers/user_provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -20,13 +23,16 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   late Timer timer;
   late CategoryProvider categoryProvider;
-
+  late UserProvider userProvider;
+  late UserModel? userModel;
   late ProductProvider productProvider;
 
   @override
   void initState() {
     categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
     productProvider = Provider.of<ProductProvider>(context, listen: false);
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+    userModel = userProvider.getUserFromLocal();
 
     getCategoriesHandler();
     getProductsHandler();
@@ -43,7 +49,14 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   toNext() async {
-    if (await getCategoriesHandler() && await getProductsHandler()) {
+    if (await getCategoriesHandler() &&
+        await getProductsHandler() &&
+        userModel != null) {
+      timer = Timer(
+        const Duration(seconds: 3),
+        () => Navigator.pushReplacementNamed(context, HomePage.route),
+      );
+    } else {
       timer = Timer(
         const Duration(seconds: 3),
         () => Navigator.pushReplacementNamed(context, SignInPage.route),

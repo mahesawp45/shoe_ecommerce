@@ -5,111 +5,105 @@ import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/shoe_card_mini.dart';
 import 'package:shamo/R/widgets/shoe_tag.dart';
+import 'package:shamo/models/product_model.dart';
 import 'package:shamo/pages/core/subpages/home/detail/detail_product_page.dart';
-import 'package:shamo/providers/product_provider.dart';
 
 class AllShoesPage extends StatelessWidget {
   const AllShoesPage({
     Key? key,
-    required this.scrollController,
     required this.products,
   }) : super(key: key);
 
   static const String route = '/all-shoes-page';
-  final ScrollController scrollController;
 
-  final ProductProvider products;
+  final List<Product>? products;
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> pops = [
-      {
-        'title': 'Court Vision 2.0',
-        'category': 'Hiking',
-        'price': '\$58,67',
-        'img': R.appAssets.pop1,
-        'desc': '''Unpaved trails and mixed surfaces are easy
-when you have the traction and support you
-need. Casual enough for the daily commute.''',
-      },
-      {
-        'title': 'Terrex Urban Low',
-        'category': 'Hiking',
-        'price': '\$143,98',
-        'img': R.appAssets.pop2,
-        'desc': '''Unpaved trails and mixed surfaces are easy
-when you have the traction and support you
-need. Casual enough for the daily commute.''',
-      },
-      {
-        'title': 'SL 20 Shoes',
-        'category': 'Running',
-        'price': '\$123,82',
-        'img': R.appAssets.pop3,
-        'desc': '''Unpaved trails and mixed surfaces are easy
-when you have the traction and support you
-need. Casual enough for the daily commute.''',
-      },
-    ];
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: _buildContent(height, width, pops),
+      extendBody: true,
+      backgroundColor: Colors.transparent,
+      body: _buildContent(height, width),
     );
   }
 
-  Widget _buildContent(
-      double height, double width, List<Map<String, dynamic>> pops) {
-    return ListView(
-      controller: scrollController,
-      padding: EdgeInsets.zero,
-      physics: const BouncingScrollPhysics(),
+  Widget _buildContent(double height, double width) {
+    return products == null
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Column(
+            children: [
+              _buildPopularProduct(height, products, width),
+              _buildNewArrivals(
+                products,
+                height,
+                width,
+              ),
+            ],
+          );
+    // : _buildPopularProduct(height, products ?? [], width);
+  }
+
+  Widget _buildNewArrivals(
+      List<Product>? products, double height, double width) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildPopularProduct(height, products, width),
-        _buildNewArrivals(pops),
+        Container(
+          padding: EdgeInsets.only(left: R.appMargin.defaultMargin, bottom: 10),
+          margin: const EdgeInsets.only(top: 40, bottom: 10),
+          child: Text(
+            'New Arrivals',
+            style: R.appTextStyle.primaryTextStyle
+                .copyWith(fontSize: 20, fontWeight: FontWeight.w600),
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          height: height * 0.52,
+          padding: const EdgeInsets.all(10),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            color: R.appColors.darkTextColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(
+              10,
+            ),
+          ),
+          child: ListView.builder(
+            itemCount: products?.length ?? 0,
+            itemBuilder: (context, index) {
+              var shoe = products?[index];
+
+              if (index >= (products?.length ?? 0)) {
+                return Column(
+                  children: [
+                    ShoeCardMini(product: shoe),
+                    const SizedBox(height: 100),
+                  ],
+                );
+              } else {
+                return ShoeCardMini(product: shoe);
+              }
+            },
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildNewArrivals(List<Map<String, dynamic>> pops) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: R.appMargin.defaultMargin,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 40, bottom: 10),
-            child: Text(
-              'New Arrivals',
-              style: R.appTextStyle.primaryTextStyle
-                  .copyWith(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-          ),
-          Column(
-            children: List.generate(pops.length, (index) {
-              var data = pops[index];
-
-              return ShoeCardMini(data: data);
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
   SizedBox _buildPopularProduct(
-      double height, ProductProvider productProvider, double width) {
+      double height, List<Product>? products, double width) {
     return SizedBox(
       height: height * 0.36,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
+          Container(
             padding: EdgeInsets.only(
               left: R.appMargin.defaultMargin,
             ),
@@ -117,23 +111,23 @@ need. Casual enough for the daily commute.''',
           ),
           Expanded(
               child: ListView.separated(
-            physics: const BouncingScrollPhysics(),
             separatorBuilder: (context, index) {
               return SizedBox(width: R.appMargin.defaultMargin);
             },
             scrollDirection: Axis.horizontal,
-            itemCount: productProvider.products.length,
+            itemCount: products?.length ?? 0,
             itemBuilder: (context, index) {
-              var data = productProvider.products[index];
+              var data = products?[index];
 
-              if ((data.id ?? 0) <= 5) {
+              if ((data?.id ?? 0) <= 5) {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
                         transitionDuration: const Duration(seconds: 1),
-                        pageBuilder: (_, __, ___) => const DetailProductPage(),
+                        pageBuilder: (_, __, ___) =>
+                            DetailProductPage(product: data),
                       ),
                     );
                   },
@@ -153,12 +147,12 @@ need. Casual enough for the daily commute.''',
                             Expanded(
                               flex: 2,
                               child: Hero(
-                                tag: data.name ?? '-',
+                                tag: data?.name ?? '-',
                                 child: SizedBox(
                                   width: double.infinity,
-                                  child: data.gallery != null
+                                  child: data?.gallery != null
                                       ? Image.network(
-                                          (data.gallery ?? [])[0]
+                                          (data?.gallery ?? [])[0]
                                               .url
                                               .toString(),
                                           fit: BoxFit.contain,
@@ -173,7 +167,7 @@ need. Casual enough for the daily commute.''',
                                 padding: const EdgeInsets.only(
                                   left: 15,
                                   right: 15,
-                                  bottom: 20,
+                                  bottom: 15,
                                 ),
                                 width: double.infinity,
                                 child: Column(
@@ -182,14 +176,14 @@ need. Casual enough for the daily commute.''',
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      data.category?.name ?? '-',
+                                      data?.category?.name ?? '-',
                                       style: R.appTextStyle.secondaryTextStyle
                                           .copyWith(
                                         fontSize: 12,
                                       ),
                                     ),
                                     Text(
-                                      data.name ?? '-',
+                                      data?.name ?? '-',
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       style: const TextStyle(
@@ -198,7 +192,7 @@ need. Casual enough for the daily commute.''',
                                       ),
                                     ),
                                     Text(
-                                      (data.price ?? 0).toString(),
+                                      (data?.price ?? 0).toString(),
                                       style: R.appTextStyle.priceTextStyle
                                           .copyWith(
                                         fontWeight: FontWeight.w600,

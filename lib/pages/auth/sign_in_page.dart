@@ -1,13 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/r_export.dart';
-import 'package:shamo/helpers/user_helpers.dart';
+import 'package:shamo/R/widgets/auth_slide_button.dart';
+import 'package:shamo/R/widgets/custom_navigation.dart';
 import 'package:shamo/pages/auth/sign_up_page.dart';
 import 'package:shamo/pages/core/home_page.dart';
 import 'package:shamo/providers/user_provider.dart';
@@ -54,37 +54,31 @@ class _SignInPageState extends State<SignInPage> {
       isLoading = true;
     });
 
-    if (await userProvider.isLogin(context, payload: {
-      'email': emailC.text,
-      'password': passC.text,
-    })) {
-      Navigator.pushReplacementNamed(context, HomePage.route);
-    } else {
-      // Snackbar ada di provider
-      log('Error');
+    try {
+      if (await userProvider.isLogin(context, payload: {
+        'email': emailC.text,
+        'password': passC.text,
+      })) {
+        CustomNavigation.pushFromBottomRemoveUntil(
+          context,
+          page: const HomePage(),
+        );
+      } else {
+        log('Error');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: R.appColors.removeFav,
+          content: Text(e.toString()),
+        ),
+      );
     }
 
     setState(() {
       isLoading = false;
     });
-  }
-
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
@@ -137,56 +131,38 @@ class _SignInPageState extends State<SignInPage> {
                     );
                   }),
                   const SizedBox(height: 30),
-                  SizedBox(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: width,
-                          height: height * 0.07,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.grey.withOpacity(0.03),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: List.generate(
-                              4,
-                              (index) => Icon(Icons.arrow_forward_ios,
-                                  color: Colors.grey.shade900, size: 15),
-                            ),
-                          ),
-                        ),
-                        Transform.translate(
-                          offset: Offset(update, 0),
-                          child: GestureDetector(
-                            onHorizontalDragEnd: (details) async {
-                              if (update >= (width * 0.68)) {
-                                await loginHandler();
+                  AuthSlideButton(
+                    label: 'Sign In',
+                    width: width,
+                    update: update,
+                    isLoading: isLoading,
+                    updateDrag: (details) {
+                      double maxLength =
+                          (width.floor() - (R.appMargin.defaultMargin * 4));
 
-                                setState(() {
-                                  update = 0;
-                                });
-                              }
-                              setState(() {
-                                update = 0;
-                              });
-                            },
-                            onHorizontalDragUpdate: (details) {
-                              if (details.localPosition.dx > 0 &&
-                                  details.localPosition.dx < (width * 0.7)) {
-                                setState(() {
-                                  update = details.localPosition.dx;
-                                });
-                              }
-                            },
-                            child: AuthButton(
-                                isLoading: isLoading,
-                                title: 'Sign In',
-                                size: height * 0.07),
-                          ),
-                        ),
-                      ],
-                    ),
+                      if (details.localPosition.dx > 0 &&
+                          details.localPosition.dx < maxLength) {
+                        setState(() {
+                          update = details.localPosition.dx;
+                        });
+                      }
+                    },
+                    endDrag: (details) async {
+                      double maxLength =
+                          (width.floor() - (R.appMargin.defaultMargin * 4));
+
+                      if (update.floor() >= maxLength.floor() ||
+                          update.floor() >= (maxLength.floor() - 3)) {
+                        await loginHandler();
+
+                        setState(() {
+                          update = 0;
+                        });
+                      }
+                      setState(() {
+                        update = 0;
+                      });
+                    },
                   ),
                   const Spacer(),
                   Padding(
@@ -195,16 +171,7 @@ class _SignInPageState extends State<SignInPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          onTap: () async {
-                            await signInWithGoogle();
-
-                            final user = UserHelpers.getUserEmail();
-                            log(user.toString());
-                            if (user != null) {
-                              Navigator.pushReplacementNamed(
-                                  context, HomePage.route);
-                            }
-                          },
+                          onTap: () async {},
                           child: Image.asset(R.appAssets.google),
                         ),
                         const SizedBox(width: 50),
@@ -231,7 +198,8 @@ class _SignInPageState extends State<SignInPage> {
                             shadowColor: Colors.transparent,
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, SignUpPage.route);
+                            CustomNavigation.pushFromRight(context,
+                                page: const SignUpPage());
                           },
                           child: Text(
                             "Sign up",

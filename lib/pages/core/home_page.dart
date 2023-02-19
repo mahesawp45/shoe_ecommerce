@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 
 import 'package:shamo/R/decorations/decoration_one.dart';
 import 'package:shamo/R/r.dart';
+import 'package:shamo/R/widgets/custom_navigation.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
-import 'package:shamo/helpers/user_helpers.dart';
 import 'package:shamo/models/category_model.dart';
 import 'package:shamo/models/user_model.dart';
 import 'package:shamo/pages/core/message_page.dart';
@@ -27,9 +27,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late UserProvider userProvider;
   late UserModel user;
+  late TabController tabController;
 
   late CategoryProvider categoryProvider;
   late ProductProvider productProvider;
@@ -60,15 +62,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     whenScroll();
+
     userProvider = Provider.of<UserProvider>(context, listen: false);
     user = userProvider.user;
 
     categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
     productProvider = Provider.of<ProductProvider>(context, listen: false);
 
-    // Pindahin ini ke splash screen
-    // getCategoriesHandler();
-    // getProductsHandler();
+    tabController =
+        TabController(length: categoryProvider.categories.length, vsync: this);
     super.initState();
   }
 
@@ -89,12 +91,9 @@ class _HomePageState extends State<HomePage> {
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageControllerHome,
         children: [
-          Consumer<CategoryProvider>(
-              builder: (context, categoryProvider, child) {
-            return Consumer<ProductProvider>(
-                builder: (context, productProvider, child) {
-              return _buildHomePage(height, categoryProvider, productProvider);
-            });
+          Consumer2<CategoryProvider, ProductProvider>(
+              builder: (context, categoryProvider, productProvider, child) {
+            return _buildHomePage(height, categoryProvider, productProvider);
           }),
           MessagePage(pageController: _pageControllerHome),
           WishListPage(pageController: _pageControllerHome),
@@ -109,31 +108,37 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         DecorationOne(height: height, top: -150, left: 0, right: 0),
-        Column(
+        ListView(
+          shrinkWrap: true,
           children: [
-            const SizedBox(height: 30),
             HeaderBar(
               user: user.user,
             ),
-            Expanded(
-              child: Column(
+            _buildCategoryIndicator(category.categories, _pageController),
+            SizedBox(
+              width: double.infinity,
+              height: height,
+              child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: tabController,
                 children: [
-                  _buildCategoryIndicator(category.categories, _pageController),
-                  Expanded(
-                    child: PageView(
-                      scrollDirection: Axis.horizontal,
-                      controller: _pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        AllShoesPage(
-                            scrollController: _controller, products: product),
-                        RunningPage(scrollController: _controller),
-                        TrainingPage(scrollController: _controller),
-                        BasketPage(scrollController: _controller),
-                        BasketPage(scrollController: _controller),
-                        BasketPage(scrollController: _controller),
-                      ],
-                    ),
+                  AllShoesPage(
+                    products: productProvider.products,
+                  ),
+                  Container(
+                    color: Colors.yellow,
+                  ),
+                  Container(
+                    color: Colors.red,
+                  ),
+                  Container(
+                    color: Colors.yellow,
+                  ),
+                  Container(
+                    color: Colors.red,
+                  ),
+                  Container(
+                    color: Colors.yellow,
                   ),
                 ],
               ),
@@ -146,25 +151,25 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCategoryIndicator(
       List<Category> category, PageController pageController) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      // padding: const EdgeInsets.only(bottom: 5),
-      height: isCloseTopContainer ? 0 : 112,
+    return SizedBox(
+      height: 112,
       child: ListView(
         clipBehavior: Clip.none,
         padding: const EdgeInsets.all(10),
-        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         children: List.generate(
           category.length,
           (ind) => GestureDetector(
             onTap: () {
               index = ind;
-              pageController.animateToPage(
-                index,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
+              tabController.animateTo(
+                ind,
+                curve: Curves.bounceInOut,
+                duration: const Duration(
+                  seconds: 0,
+                ),
               );
+
               setState(() {});
             },
             child: Transform.translate(
@@ -281,7 +286,7 @@ class HeaderBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Hallo, ${user?.name ?? UserHelpers.getUserDisplayName()} ",
+                  "Hallo, ${user?.name ?? ""} ",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: const TextStyle(
@@ -292,7 +297,7 @@ class HeaderBar extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  "@${user?.username ?? UserHelpers.getUserUid()}",
+                  "@${user?.username ?? ""}",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: R.appTextStyle.darkTextStyle,
@@ -321,7 +326,7 @@ class CartFloatingButton extends StatelessWidget {
     return FloatingActionButton(
       backgroundColor: Colors.transparent,
       onPressed: () {
-        Navigator.pushNamed(context, CartPage.route);
+        CustomNavigation.pushFromBottom(context, page: const CartPage());
       },
       child: Container(
         height: double.infinity,
@@ -365,7 +370,8 @@ class MyBottomAppBar extends StatelessWidget {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       child: BottomAppBar(
         color: R.appColors.bgColor3.withOpacity(0.55),
-        // color: Colors.white.withOpacity(0.05),
+        surfaceTintColor: R.appColors.bgColor3.withOpacity(0.55),
+        elevation: 0,
         shape: const CircularNotchedRectangle(),
         clipBehavior: Clip.antiAlias,
         notchMargin: 15,

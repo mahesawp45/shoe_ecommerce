@@ -1,14 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/my_header.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
-import 'package:shamo/helpers/user_helpers.dart';
-import 'package:shamo/pages/auth/sign_in_page.dart';
 import 'package:shamo/pages/core/subpages/profile/edit_profile_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -33,10 +29,10 @@ class ProfilePage extends StatelessWidget {
           Navigator.pushNamed(context, EditProfilePage.route);
         },
       },
-      {
-        'title': 'Your Orders',
-        'onTap': () {},
-      },
+      // {
+      //   'title': 'Your Orders',
+      //   'onTap': () {},
+      // },
       {
         'title': 'Help',
         'onTap': () {},
@@ -47,10 +43,10 @@ class ProfilePage extends StatelessWidget {
       {
         'title': 'General',
       },
-      {
-        'title': 'Privacy and Policy',
-        'onTap': () {},
-      },
+      // {
+      //   'title': 'Privacy and Policy',
+      //   'onTap': () {},
+      // },
       {
         'title': 'Term of Service',
         'onTap': () {},
@@ -207,15 +203,15 @@ class ProfilePage extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              final user = UserHelpers.getUserEmail();
-              if (user != null) {
-                await GoogleSignIn().signOut();
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  SignInPage.route,
-                  (route) => false,
-                );
-              }
+              // final user = UserHelpers.getUserEmail();
+              // if (user != null) {
+              //   await GoogleSignIn().signOut();
+              //   await FirebaseAuth.instance.signOut();
+              //   Navigator.of(context).pushNamedAndRemoveUntil(
+              //     SignInPage.route,
+              //     (route) => false,
+              //   );
+              // }
             },
             child: SizedBox(
               height: 25,

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
+import 'package:shamo/helpers/hive_helpers.dart';
 import 'package:shamo/models/user_model.dart';
 import 'package:shamo/repository/user_repository.dart';
 
@@ -11,7 +14,6 @@ class UserProvider with ChangeNotifier {
 
   set user(UserModel user) {
     _user = user;
-    notifyListeners();
   }
 
   bool get isVisible => _isVisible;
@@ -28,14 +30,7 @@ class UserProvider with ChangeNotifier {
 
       return true;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: R.appColors.removeFav,
-          content: Text(e.toString()),
-        ),
-      );
-      return false;
+      rethrow;
     }
   }
 
@@ -44,16 +39,25 @@ class UserProvider with ChangeNotifier {
     try {
       user = await UserRepository().postLogin(data: payload);
 
+      var data = jsonEncode(user);
+
+      HiveHelpers.saveData(key: R.appbox.myProfile, data: data);
+
       return true;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: R.appColors.removeFav,
-          content: Text(e.toString()),
-        ),
-      );
-      return false;
+      rethrow;
+    }
+  }
+
+  UserModel? getUserFromLocal() {
+    var data = HiveHelpers.getData(key: R.appbox.myProfile);
+
+    if (data != null) {
+      var result = jsonDecode(data);
+      user = UserModel.fromJson(result);
+      return user;
+    } else {
+      return null;
     }
   }
 }

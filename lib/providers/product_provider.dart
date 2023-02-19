@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/models/product_model.dart';
