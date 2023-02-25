@@ -146,19 +146,14 @@ class AllShoesPage extends StatelessWidget {
                           children: [
                             Expanded(
                               flex: 2,
-                              child: Hero(
-                                tag: data?.name ?? '-',
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: data?.gallery != null
-                                      ? Image.network(
-                                          (data?.gallery ?? [])[0]
-                                              .url
-                                              .toString(),
-                                          fit: BoxFit.contain,
-                                        )
-                                      : Image.asset(R.appAssets.pop3),
-                                ),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: data?.gallery != null
+                                    ? Image.network(
+                                        (data?.gallery ?? [])[0].url.toString(),
+                                        fit: BoxFit.contain,
+                                      )
+                                    : Image.asset(R.appAssets.pop3),
                               ),
                             ),
                             Expanded(

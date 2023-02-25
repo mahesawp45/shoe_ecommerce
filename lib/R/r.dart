@@ -1,5 +1,4 @@
 import 'package:shamo/R/constants/app_asset.dart';
-import 'package:shamo/R/constants/app_bottom_menu_item.dart';
 import 'package:shamo/R/constants/app_box.dart';
 import 'package:shamo/R/constants/app_colors.dart';
 import 'package:shamo/R/constants/app_margin.dart';
@@ -14,6 +13,5 @@ abstract class R {
   static final AppTheme appTheme = AppTheme();
   static final AppSize appSize = AppSize();
   static final AppAssets appAssets = AppAssets();
-  static final AppBottomMenuItem appBottomMenuItem = AppBottomMenuItem();
   static final Appbox appbox = Appbox();
 }
