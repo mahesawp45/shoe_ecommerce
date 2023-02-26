@@ -60,4 +60,8 @@ class UserProvider with ChangeNotifier {
       return null;
     }
   }
+
+  loggout() {
+    HiveHelpers.deleteData(key: R.appbox.myProfile);
+  }
 }

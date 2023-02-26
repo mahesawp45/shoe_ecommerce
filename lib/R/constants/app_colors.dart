@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  final Color primaryColor = const Color(0xff6C5ECF);
+  final Color primaryColor = const Color.fromARGB(255, 107, 88, 245);
   final Color secondaryColor = const Color(0xff38ABBE);
   final Color alertColor = const Color(0xffED6363);
   final Color priceColor = const Color(0xff2C96F1);

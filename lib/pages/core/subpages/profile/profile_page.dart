@@ -7,6 +7,7 @@ import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/custom_navigation.dart';
 import 'package:shamo/R/widgets/my_header.dart';
 import 'package:shamo/R/widgets/user_avatar.dart';
+import 'package:shamo/pages/auth/sign_in_page.dart';
 import 'package:shamo/pages/core/subpages/profile/edit_profile_page.dart';
 import 'package:shamo/providers/user_provider.dart';
 
@@ -166,17 +167,23 @@ class _ProfilePageState extends State<ProfilePage> {
                 }),
               ),
             ),
-            GestureDetector(
-              onTap: () async {},
-              child: SizedBox(
-                height: 25,
-                width: 25,
-                child: Image.asset(
-                  R.appAssets.logout,
-                  color: R.appColors.bgColor3,
+            Consumer<UserProvider>(builder: (context, userProvider, child) {
+              return GestureDetector(
+                onTap: () {
+                  userProvider.loggout();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, SignInPage.route, (route) => false);
+                },
+                child: SizedBox(
+                  height: 25,
+                  width: 25,
+                  child: Image.asset(
+                    R.appAssets.logout,
+                    color: R.appColors.bgColor3,
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       );
