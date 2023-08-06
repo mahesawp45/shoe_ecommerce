@@ -29,19 +29,23 @@ class ShoeCardMini extends StatelessWidget {
         width: double.infinity,
         child: Row(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: R.appColors.cardColor,
-                borderRadius: BorderRadius.circular(20),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(
+                10,
               ),
-              width: 120,
-              height: 120,
-              child: product?.gallery != null
-                  ? Image.network(
-                      product!.gallery![0].url.toString(),
-                      fit: BoxFit.contain,
-                    )
-                  : const SizedBox(),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: R.appColors.cardColor,
+                ),
+                width: 120,
+                height: 120,
+                child: product?.gallery != null
+                    ? Image.network(
+                        product!.gallery![0].url.toString(),
+                        fit: BoxFit.contain,
+                      )
+                    : const SizedBox(),
+              ),
             ),
             Container(
               padding: const EdgeInsets.all(15),

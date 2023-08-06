@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:shamo/R/r.dart';
 import 'package:shamo/R/widgets/favorite_button.dart';
 import 'package:shamo/R/widgets/my_button.dart';
+import 'package:shamo/models/gallery_model.dart';
 import 'package:shamo/models/product_model.dart';
 import 'package:shamo/pages/core/subpages/cart/cart_page.dart';
 
@@ -37,26 +38,18 @@ class _DetailProductPageState extends State<DetailProductPage> {
 
     double width = size.size.width;
 
-    List popImages = List.generate(0, (index) {
-      return widget.product?.gallery ?? '';
-    });
+    List<Gallery> popImages = widget.product?.gallery ?? [];
 
     List<Widget> buildListProductImage() {
       return List.generate(popImages.length, (index) {
-        if (index > 0) {
-          return Image.asset(
-            popImages[index]['img'],
+        return Hero(
+          transitionOnUserGestures: true,
+          tag: popImages[index].url ?? '-',
+          child: Image.network(
+            popImages[index].url ?? '-',
             fit: BoxFit.contain,
-          );
-        } else {
-          return Hero(
-              transitionOnUserGestures: true,
-              tag: popImages[0]['title'],
-              child: Image.asset(
-                popImages[0]['img'],
-                fit: BoxFit.contain,
-              ));
-        }
+          ),
+        );
       });
     }
 
@@ -79,19 +72,19 @@ class _DetailProductPageState extends State<DetailProductPage> {
     }
 
     List<Widget> buildFamiliarShoes() {
-      return List.generate(8, (index) {
-        return Container(
-          height: 54,
-          width: 54,
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: R.appColors.cardColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Image.asset(
-            // widget.pop?['img'],
-            '/',
-            fit: BoxFit.contain,
+      return List.generate(popImages.length, (index) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: R.appColors.cardColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Image.network(
+              popImages[index].url ?? '-',
+              fit: BoxFit.contain,
+            ),
           ),
         );
       });
@@ -356,8 +349,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
           ),
           const SizedBox(height: 10),
           Text(
-            // widget.pop?['desc'] ?? 'No Description',
-            '',
+            widget.product?.description ?? '-',
             maxLines: 3,
             overflow: TextOverflow.clip,
             style: R.appTextStyle.darkTextStyle.copyWith(
@@ -387,8 +379,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
             style: R.appTextStyle.primaryTextStyle,
           ),
           Text(
-            // widget.pop?['price'],
-            '',
+            widget.product?.price.toString() ?? "-",
             style: R.appTextStyle.priceTextStyle
                 .copyWith(fontWeight: FontWeight.bold),
           ),
@@ -405,15 +396,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              // widget.pop?['title'],
-              '',
+              widget.product?.name ?? "-",
               style: R.appTextStyle.primaryTextStyle
                   .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             Text(
-              // widget.pop?['category'],
-              '',
+              widget.product?.category?.name ?? "-",
               style: R.appTextStyle.secondaryTextStyle.copyWith(fontSize: 12),
             ),
           ],
@@ -470,11 +459,12 @@ class _DetailProductPageState extends State<DetailProductPage> {
   }
 
   Container _buildTopContentProductDetail(
-      double width,
-      double paddingTop,
-      int index,
-      List<Widget> Function() buildListProductImage,
-      List<Widget> buildListProductImageIndicator) {
+    double width,
+    double paddingTop,
+    int index,
+    List<Widget> Function() buildListProductImage,
+    List<Widget> buildListProductImageIndicator,
+  ) {
     return Container(
       width: width,
       padding: const EdgeInsets.only(bottom: 20),

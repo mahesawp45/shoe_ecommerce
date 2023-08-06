@@ -47,6 +47,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       child: Scaffold(
         extendBody: true,
         bottomNavigationBar: BottomAppBar(
+          height: 100,
           color: R.appColors.bgColor3.withOpacity(0.4),
           clipBehavior: Clip.antiAlias,
           child: BackdropFilter(
@@ -56,8 +57,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
               children: [
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: R.appMargin.defaultMargin, vertical: 25),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
+                  ),
                   child: SizedBox(
                     height: 50,
                     width: double.infinity,
@@ -144,7 +147,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
             Expanded(
               child: ListView(
-                physics: const BouncingScrollPhysics(),
                 padding: EdgeInsets.all(R.appMargin.defaultMargin),
                 children: [
                   SizedBox(
@@ -267,6 +269,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 150),
                 ],
               ),
             ),

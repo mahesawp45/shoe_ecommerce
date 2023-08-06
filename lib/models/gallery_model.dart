@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class Gallery {
   int? id;
   int? productsId;
@@ -32,5 +33,32 @@ class Gallery {
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'Gallery(id: $id, productsId: $productsId, url: $url, deletedAt: $deletedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  }
+
+  @override
+  bool operator ==(covariant Gallery other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.productsId == productsId &&
+        other.url == url &&
+        other.deletedAt == deletedAt &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        productsId.hashCode ^
+        url.hashCode ^
+        deletedAt.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }

@@ -122,18 +122,7 @@ class _CartPageState extends State<CartPage> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   mainAxisAlignment: MainAxisAlignment.end,
-                                  // mainAxisAlignment:  MainAxisAlignment.spaceBetween,
                                   children: [
-                                    // Transform.translate(
-                                    //   offset: const Offset(15, 0),
-                                    //   child: CartOperationButton(
-                                    //     color: Colors.transparent,
-                                    //     child: Image.asset(
-                                    //       R.appAssets.removeFromCart,
-                                    //       color: R.appColors.cardColor,
-                                    //     ),
-                                    //   ),
-                                    // ),
                                     Transform.translate(
                                       offset: const Offset(20, 0),
                                       child: Container(
@@ -188,6 +177,7 @@ class _CartPageState extends State<CartPage> {
       Map<String, dynamic> pop, double update, double width) {
     return BottomAppBar(
       color: R.appColors.bgColor3.withOpacity(0.9),
+      height: 150,
       clipBehavior: Clip.antiAlias,
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -196,8 +186,10 @@ class _CartPageState extends State<CartPage> {
           children: [
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                  horizontal: R.appMargin.defaultMargin, vertical: 25),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+                // vertical: 25,
+              ),
               child: Column(
                 children: [
                   Container(
@@ -225,7 +217,7 @@ class _CartPageState extends State<CartPage> {
                   ),
                   SizedBox(
                     height: 50,
-                    width: 315,
+                    width: double.infinity,
                     child: Stack(
                       children: [
                         Container(

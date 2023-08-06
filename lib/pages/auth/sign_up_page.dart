@@ -93,7 +93,6 @@ class _SignUpPageState extends State<SignUpPage> {
         children: [
           DecorationOne(height: height, top: -120, right: -70),
           SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
             child: Container(
               width: width,
               height: height,
