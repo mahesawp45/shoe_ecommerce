@@ -1,8 +1,8 @@
-# shamo
+# Shamo
 
-A new Flutter project by me for E-Commerce.
+A Flutter project by me for Static E-Commerce Apps Portfolio.
 
-## Getting Started
+## Screen Shot
 <div style="display:flex;">
     <img alt="Splash" title="Splash" width="200px" src="assets/1.jpg" />
     <img alt="Login" title="Login" width="200px" src="assets/2.jpg" />
@@ -12,3 +12,7 @@ A new Flutter project by me for E-Commerce.
     <img alt="Checkout" title="Checkout" width="200px" src="assets/6.jpg" />
     <img alt="Profile" title="Profile" width="200px" src="assets/7.jpg" />
 </div>
+
+## Third Libraries
+- Firebase (Authentication)
+- Provider
